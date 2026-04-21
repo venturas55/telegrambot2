@@ -1,6 +1,3 @@
-//export const USERS_PERMITIDOS =  [8406513586, 8277408556, 8718113457,1946422850];
-                                  //Guardian     Jorge       Robin      Nacho
-
 export const MY_CHAT_ID = Number(process.env.MY_CHAT_ID);
 export const ADMIN_ID = Number(process.env.ADMIN_ID);
 export const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -9,7 +6,7 @@ export const ruta = `${process.env.HOME}/.pm2/logs/telegramBOT-out.log`;
 export const DIAS_VALIDOS = ["ayer", "hoy", "mañana"];
 export const PLAYAS_VALIDAS = [
   "peñíscola", "castellon", "burriana", "canet",
-  "port saplaya", "saler", "mareny", "oliva",
+  "port saplaya", "saler","perelló", "mareny", "oliva",
   "molins", "altea", "villajoyosa", "santa pola", "los narejos"
 ];
 export const HELP = `
