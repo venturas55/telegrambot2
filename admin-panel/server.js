@@ -128,6 +128,6 @@ app.get('/logout', (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log("🚀 Admin panel en http://localhost:3000");
+app.listen(process.env.PORT, () => {
+  console.log(`🚀 Admin panel en http://localhost:${process.env.PORT}`);
 });
