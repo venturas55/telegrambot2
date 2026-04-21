@@ -40,7 +40,7 @@ app.use(simpleAuthMiddleware);
  * LISTADO PRINCIPAL
  */
 
-app.get("/", async (req, res) => {
+app.get("/", simpleAuthMiddleware,async (req, res) => {
   const [users] = await db.query(`
     SELECT 
       u.telegram_id,
@@ -62,7 +62,7 @@ app.get("/", async (req, res) => {
 /**
  * REGISTRAR PAGO + EXTENDER SUBSCRIPCION
  */
-app.post("/pay", async (req, res) => {
+app.post("/pay", simpleAuthMiddleware,async (req, res) => {
   const { telegram_id, subscripcion_id } = req.body;
 
   await db.query(`
@@ -80,7 +80,31 @@ app.post("/pay", async (req, res) => {
   res.redirect("/");
 });
 
-app.post("/revoke", async (req, res) => {
+app.post("/alta-nueva", async (req, res) => {
+  const { telegram_id, usuario, nombre } = req.body;
+
+  try {
+    await db.query(`
+      INSERT INTO usuarios (telegram_id, username, nombre, fecha_alta)
+      VALUES (?, ?, ?, NOW())
+    `, [telegram_id, usuario, nombre]);
+
+    res.json({
+      ok: true,
+      message: "Usuario creado correctamente"
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      ok: false,
+      message: "Error al crear el usuario"
+    });
+  }
+});
+
+app.post("/revoke",simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
 
   await db.query(`
@@ -92,7 +116,7 @@ app.post("/revoke", async (req, res) => {
   res.redirect("/");
 });
 
-app.post("/activate", async (req, res) => {
+app.post("/activate", simpleAuthMiddleware,async (req, res) => {
   const { subscripcion_id } = req.body;
 
   await db.query(`
@@ -103,7 +127,6 @@ app.post("/activate", async (req, res) => {
 
   res.redirect("/");
 });
-
 
 //rutras para login
 app.get('/login', (req, res) => {
@@ -126,7 +149,6 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
-
 
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Admin panel en http://localhost:${process.env.PORT}`);

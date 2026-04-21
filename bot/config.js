@@ -71,3 +71,24 @@ export const logAccion = (user, userId, chatId, accion) => {
     `[${moment(Date.now()).format("L LTS")}] \t ${user} (${userId} -${chatId} ) envió \t ${accion}`
   );
 };
+
+export async function altaUsuarioEnAdminPanel(telegram_id,usuario,nombre) {
+  try {
+    const response = await fetch('https://guardiandelfaro.es:7002/alta-nueva', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        telegram_id,
+        usuario,
+        nombre
+      })
+    });
+
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}

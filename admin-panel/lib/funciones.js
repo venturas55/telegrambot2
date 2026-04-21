@@ -1,10 +1,14 @@
 export function simpleAuthMiddleware(req, res, next) {
-    const allowedPaths = ['/login'];
+  // rutas públicas (whitelist)
+  const publicPaths = ["/login", "/alta-nueva"];
 
-    if (!req.session.isAuthenticated && !allowedPaths.includes(req.path)) {
-        return res.redirect('/login');
-    }
+  if (publicPaths.includes(req.path)) {
+    return next();
+  }
 
-    next();
+  if (req.session.isAuthenticated) {
+    return next();
+  }
+
+  res.redirect("/login");
 }
-

@@ -1,5 +1,5 @@
 import { getUserByTelegramId } from '../services/userService.js';
-import {ADMIN_ID} from '../config.js'
+import {ADMIN_ID,altaUsuarioEnAdminPanel} from '../config.js'
 
 export const checkAccess = async (bot, msg, next) => {
   const userId = msg.from.id;
@@ -14,6 +14,7 @@ export const checkAccess = async (bot, msg, next) => {
     if (!user) {
       await bot.sendMessage(chatId, `❌ ${first_name} no estas registrado`);
       await bot.sendMessage(ADMIN_ID, ` ⚠️ El usuario ${first_name} ${last_name} con el id: ${userId} quiere tener acceso al Buscaviento_bot ⚠️`);
+      altaUsuarioEnAdminPanel(chatId,first_name,first_name+" "+last_name);
       return;
     }
 
