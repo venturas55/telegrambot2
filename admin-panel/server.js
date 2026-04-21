@@ -1,13 +1,18 @@
 import express from "express";
 import { engine } from "express-handlebars";
+import  session from 'express-session';
 import db  from "./db.js" ;
 import 'dotenv/config';
 import helpers from './lib/handlebars.js';
+import {simpleAuthMiddleware} from './lib/funciones.js';
 import * as path from "path";
 import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 const app = express();
+// Credenciales "a capón"
+const AUTH_USER = process.env.AUTH_USER;
+const AUTH_PASS = process.env.AUTH_PASS;
 
 app.use((express.static(path.join(__dirname,"public"))));
 app.use(express.urlencoded({ extended: true }));
@@ -21,8 +26,15 @@ app.engine("hbs", engine({
 app.set("view engine", "hbs");
 app.set("views", "./views");
 
+// Sesión
+app.use(session({
+    secret: 'clave_super_secreta',
+    resave: false,
+    saveUninitialized: false,
+}));
 
-
+// IMPORTANTE: después de session
+app.use(simpleAuthMiddleware);
 
 /**
  * LISTADO PRINCIPAL
@@ -91,6 +103,30 @@ app.post("/activate", async (req, res) => {
 
   res.redirect("/");
 });
+
+
+//rutras para login
+app.get('/login', (req, res) => {
+    res.render('login', { error: null });
+});
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    if (username === AUTH_USER && password === AUTH_PASS) {
+        req.session.isAuthenticated = true;
+        return res.redirect('/');
+    }
+
+    res.render('login', { error: 'Credenciales incorrectas' });
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/login');
+    });
+});
+
 
 app.listen(3000, () => {
   console.log("🚀 Admin panel en http://localhost:3000");
