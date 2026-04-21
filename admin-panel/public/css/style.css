@@ -1,0 +1,192 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg, #f5f7fb 0%, #eef2ff 100%);
+  margin: 0;
+  padding: 30px;
+  color: #1f2937;
+}
+
+/* TÍTULO */
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+}
+
+/* TABLA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+/* HEADER */
+thead {
+  background: linear-gradient(90deg, #0f172a, #1e293b);
+  color: white;
+}
+
+th {
+  padding: 16px 18px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+/* CELDAS */
+td {
+  padding: 16px 18px;
+  font-size: 14px;
+}
+
+/* FILAS */
+tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.15s ease;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+  transform: scale(1.002);
+}
+
+/* CENTRADO */
+td.center {
+  text-align: center;
+}
+
+/* ACCIONES */
+.actions {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  gap: 8px;
+}
+
+/* BOTONES */
+button {
+  border: none;
+  padding: 7px 11px;
+  font-size: 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+/* BOTÓN PAGAR */
+.btn-pay {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+
+.btn-pay:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* REVOCAR */
+.btn-revoke {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+}
+
+.btn-revoke:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* ACTIVAR */
+.btn-activate {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.btn-activate:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+/* ESTADOS */
+.activo {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.inactivo {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.expirado {
+  color: #f59e0b;
+  font-weight: 700;
+}
+
+/* MODAL */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    width: 340px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    animation: pop 0.18s ease-out;
+  }
+
+
+
+  .hidden {
+    display: none;
+  }
+
+  button {
+    margin: 2px;
+  }
+@keyframes pop {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-content p {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+/* BOTONES MODAL */
+.modal-content button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* OCULTO */
+.hidden {
+  display: none;
+}

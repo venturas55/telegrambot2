@@ -1,0 +1,21 @@
+{
+  "name": "telegrambot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dayjs": "^1.11.20",
+    "dotenv": "^17.4.2",
+    "moment": "^2.30.1",
+    "mysql2": "^3.22.1",
+    "node-telegram-bot-api": "^0.67.0"
+  }
+}

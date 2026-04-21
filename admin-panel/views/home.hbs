@@ -1,0 +1,55 @@
+<h1>👤 Usuarios</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Usuario</th>
+      <th>Telegram</th>
+      <th>Estado</th>
+      <th>Expira</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each users}}
+    <tr>
+      <td>{{username}}</td>
+      <td>{{telegram_id}}</td>
+      <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}    ">{{estado}}</td>
+      <td class="center">{{formatearSp end_date}}</td>
+      <td class="actions">
+        <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+          💳 Pago
+        </button>
+        {{#if has_access}}
+        <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+          🚫 Revocar
+        </button>
+        {{else}}
+        <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+          ✅ Activar
+        </button>
+        {{/if}}
+
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <p id="modal-text"></p>
+
+    <form id="modal-form" method="POST">
+      <input type="hidden" name="telegram_id" id="telegram_id">
+      <input type="hidden" name="subscripcion_id" id="subscripcion_id">
+
+      <button type="submit">Confirmar</button>
+      <button type="button" onclick="closeModal()">Cancelar</button>
+    </form>
+  </div>
+</div>
+
