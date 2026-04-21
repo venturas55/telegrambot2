@@ -6,7 +6,7 @@ export const ruta = `${process.env.HOME}/.pm2/logs/telegramBOT2-out.log`;
 export const DIAS_VALIDOS = ["ayer", "hoy", "mañana"];
 export const PLAYAS_VALIDAS = [
   "peñíscola", "castellon", "burriana", "canet",
-  "port saplaya", "saler","perelló", "mareny", "oliva",
+  "port saplaya", "saler", "perelló", "mareny", "oliva",
   "molins", "altea", "villajoyosa", "santa pola", "los narejos"
 ];
 export const HELP = `
@@ -28,7 +28,7 @@ export const estadoUsuarios = {};
 // Estado para envio de sugerencias al developer
 export const esperandoSugerencia = new Set();
 
-export const mostrarPlayas = (bot,chatId) => {
+export const mostrarPlayas = (bot, chatId) => {
   bot.sendMessage(chatId, "🏖️ Elige una playa:", {
     reply_markup: {
       inline_keyboard: PLAYAS_VALIDAS.map(p => [
@@ -49,7 +49,7 @@ export const validar = (playa, dia) => {
 };
 
 // 🎯 ACCIÓN PRINCIPAL INPUT ESCRITO A MANO
-export const procesarPeticion = (bot,userId,chatId, user, playa, dia) => {
+export const procesarPeticion = (bot, userId, chatId, user, playa, dia) => {
 
   const error = validar(playa, dia);
   if (error) {
@@ -61,7 +61,7 @@ export const procesarPeticion = (bot,userId,chatId, user, playa, dia) => {
   bot.sendMessage(MY_CHAT_ID, mensaje);
 
   bot.sendMessage(chatId, `⏳ Procesando...`);
-  logAccion(user,userId, chatId, "Procesado: "+playa+" "+dia);
+  logAccion(user, userId, chatId, "Procesado: " + playa + " " + dia);
 
 };
 
@@ -72,7 +72,7 @@ export const logAccion = (user, userId, chatId, accion) => {
   );
 };
 
-export async function altaUsuarioEnAdminPanel(telegram_id,usuario,nombre) {
+export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {
   try {
     const response = await fetch('http://guardiandelfaro.es:7002/alta-nueva', {
       method: 'POST',
@@ -87,7 +87,7 @@ export async function altaUsuarioEnAdminPanel(telegram_id,usuario,nombre) {
     });
 
     const data = await response.json();
-    console.log("DATA:",data);
+    console.log("DATA:", data);
   } catch (error) {
     console.error(error);
   }

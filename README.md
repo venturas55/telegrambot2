@@ -1,9 +1,15 @@
 # telegrambot
 
 ## En la carpeta bot
-    Se encuentra el desarrollo del bot
+    Se encuentra el desarrollo del bot.
+S   i el usuario no consta en la bbdd de admin-panel, se da de alta automaticamente al enviar un mensaje al bot.
+    TODO: Avisar cuando queden 48h de subscripción
+
 ## En la carpeta admin-panel 
     Se encuentra otro proyecto en nodejs con express para gestionar los usuarios.
+    TODO: Ver los pagos de cada usuario. y Total pagado por usuario y global.   
+    TODO: Expira en... handlebars
+
 ## En la carpeta tasker
     Captuas de como se configura la automatización mediante la app tasker.
 

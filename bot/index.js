@@ -17,9 +17,44 @@ import { normalizar, parseInput } from './utils.js';
 import { checkAccess } from './middlewares/auth.js';
 import { handleCommands } from './handlers/commands.js';
 
+import cron from "node-cron";
+import pool from "./services/db.js";
 dayjs.locale('es');
 
 const bot = initTelegram(BOT_TOKEN);
+
+// ==============================================
+// 💬NODE CRON PARA NOTIFICAR VENCIMIENTO PROXIMO
+// ==============================================
+cron.schedule('0 8 * * *', async () => {
+  try {
+    const [rows] = await db.query(`
+      SELECT telegram_id, end_date
+      FROM subscripciones
+      WHERE estado = 'activo'
+        AND end_date IS NOT NULL
+        AND end_date BETWEEN NOW() AND NOW() + INTERVAL 5 DAY
+    `);
+
+    for (const user of rows) {
+      const fechaFormateada = new Date(user.end_date).toLocaleString('es-ES', {
+        timeZone: 'Europe/Madrid',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      const chatId = user.telegram_id;
+      const mensaje = `⚠️ Tu suscripción expira pronto.\n\n📅 Fecha de expiración: ${fechaFormateada}\n\nRenueva para no perder acceso.`;
+      await bot.sendMessage(chatId, mensaje);
+    }
+
+    console.log(`Avisos enviados: ${rows.length}`);
+  } catch (err) {
+    console.error('Error en cron:', err);
+  }
+});
 
 // ======================
 // 💬 ERROR POLLING
@@ -57,7 +92,7 @@ bot.on('message', async (msg) => {
       bot.sendMessage(chatId, HELP);
       return;
     }
-    procesarPeticion(bot, userId, chatId, user, parsed.playa.toLowerCase(),      parsed.dia.toLowerCase());
+    procesarPeticion(bot, userId, chatId, user, parsed.playa.toLowerCase(), parsed.dia.toLowerCase());
   });
 });
 
