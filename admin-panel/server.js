@@ -1,10 +1,10 @@
 import express from "express";
 import { engine } from "express-handlebars";
-import  session from 'express-session';
-import db  from "./db.js" ;
+import session from 'express-session';
+import db from "./db.js";
 import 'dotenv/config';
 import helpers from './lib/handlebars.js';
-import {simpleAuthMiddleware} from './lib/funciones.js';
+import { simpleAuthMiddleware } from './lib/funciones.js';
 import * as path from "path";
 import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -14,7 +14,7 @@ const app = express();
 const AUTH_USER = process.env.AUTH_USER;
 const AUTH_PASS = process.env.AUTH_PASS;
 app.use(express.json());
-app.use((express.static(path.join(__dirname,"public"))));
+app.use((express.static(path.join(__dirname, "public"))));
 app.use(express.urlencoded({ extended: true }));
 
 // Handlebars setup
@@ -28,9 +28,9 @@ app.set("views", "./views");
 
 // Sesión
 app.use(session({
-    secret: 'clave_super_secreta',
-    resave: false,
-    saveUninitialized: false,
+  secret: 'clave_super_secreta',
+  resave: false,
+  saveUninitialized: false,
 }));
 
 // IMPORTANTE: después de session
@@ -40,7 +40,7 @@ app.use(simpleAuthMiddleware);
  * LISTADO PRINCIPAL
  */
 
-app.get("/", simpleAuthMiddleware,async (req, res) => {
+app.get("/", simpleAuthMiddleware, async (req, res) => {
   const [users] = await db.query(`
     SELECT 
       u.telegram_id,
@@ -62,7 +62,7 @@ app.get("/", simpleAuthMiddleware,async (req, res) => {
 /**
  * REGISTRAR PAGO + EXTENDER SUBSCRIPCION
  */
-app.post("/pay", simpleAuthMiddleware,async (req, res) => {
+app.post("/pay", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id, subscripcion_id } = req.body;
 
   await db.query(`
@@ -90,6 +90,11 @@ app.post("/alta-nueva", async (req, res) => {
       VALUES (?, ?, ?, NOW())
     `, [telegram_id, usuario, nombre]);
 
+    await db.query(`
+    INSERT INTO  subscripciones(telegram_id, estado, start_date, end_date)
+    values (?,'inactivo',NOW(),NOW() )
+  `, [telegram_id]);
+
     res.json({
       ok: true,
       message: "Usuario creado correctamente"
@@ -105,7 +110,7 @@ app.post("/alta-nueva", async (req, res) => {
   }
 });
 
-app.post("/revoke",simpleAuthMiddleware, async (req, res) => {
+app.post("/revoke", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
 
   await db.query(`
@@ -117,7 +122,7 @@ app.post("/revoke",simpleAuthMiddleware, async (req, res) => {
   res.redirect("/");
 });
 
-app.post("/activate", simpleAuthMiddleware,async (req, res) => {
+app.post("/activate", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
 
   await db.query(`
@@ -129,26 +134,40 @@ app.post("/activate", simpleAuthMiddleware,async (req, res) => {
   res.redirect("/");
 });
 
+app.post("/remove/:telegram_id", simpleAuthMiddleware, async (req, res) => {
+  const { subscripcion_id } = req.params;
+
+  await db.query(`
+    DELETE FROM usuarios WHERE telegram_id=?
+  `, [telegram_id]);
+  
+    await db.query(`
+    DELETE FROM subscripciones WHERE telegram_id=?
+  `, [telegram_id]);
+
+  res.redirect("/");
+});
+
 //rutras para login
 app.get('/login', (req, res) => {
-    res.render('login', { error: null });
+  res.render('login', { error: null });
 });
 
 app.post('/login', (req, res) => {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
 
-    if (username === AUTH_USER && password === AUTH_PASS) {
-        req.session.isAuthenticated = true;
-        return res.redirect('/');
-    }
+  if (username === AUTH_USER && password === AUTH_PASS) {
+    req.session.isAuthenticated = true;
+    return res.redirect('/');
+  }
 
-    res.render('login', { error: 'Credenciales incorrectas' });
+  res.render('login', { error: 'Credenciales incorrectas' });
 });
 
 app.get('/logout', (req, res) => {
-    req.session.destroy(() => {
-        res.redirect('/login');
-    });
+  req.session.destroy(() => {
+    res.redirect('/login');
+  });
 });
 
 app.listen(process.env.PORT, () => {
