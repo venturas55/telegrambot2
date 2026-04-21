@@ -74,7 +74,7 @@ export const logAccion = (user, userId, chatId, accion) => {
 
 export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {
   try {
-    const response = await fetch('http://guardiandelfaro.es:7002/alta-nueva', {
+    const response = await fetch(process.env.URL_DESPLIEGUE, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

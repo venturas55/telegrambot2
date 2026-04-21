@@ -1,7 +1,3 @@
-// session.js
-
-
-
 export async function startSession(mensaje) {
   const response = await fetch("https://api.openweathermap.org/assistant/session", {
     method: "POST",
