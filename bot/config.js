@@ -2,7 +2,7 @@ export const MY_CHAT_ID = Number(process.env.MY_CHAT_ID);
 export const ADMIN_ID = Number(process.env.ADMIN_ID);
 export const BOT_TOKEN = process.env.BOT_TOKEN;
 import moment from 'moment';
-export const ruta = `${process.env.HOME}/.pm2/logs/telegramBOT-out.log`;
+export const ruta = `${process.env.HOME}/.pm2/logs/telegramBOT2-out.log`;
 export const DIAS_VALIDOS = ["ayer", "hoy", "mañana"];
 export const PLAYAS_VALIDAS = [
   "peñíscola", "castellon", "burriana", "canet",
