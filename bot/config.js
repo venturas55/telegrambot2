@@ -74,7 +74,7 @@ export const logAccion = (user, userId, chatId, accion) => {
 
 export async function altaUsuarioEnAdminPanel(telegram_id,usuario,nombre) {
   try {
-    const response = await fetch('https://guardiandelfaro.es:7002/alta-nueva', {
+    const response = await fetch('http://guardiandelfaro.es:7002/alta-nueva', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ export async function altaUsuarioEnAdminPanel(telegram_id,usuario,nombre) {
     });
 
     const data = await response.json();
-    console.log(data);
+    console.log("DATA:",data);
   } catch (error) {
     console.error(error);
   }

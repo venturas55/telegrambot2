@@ -13,7 +13,7 @@ const app = express();
 // Credenciales "a capón"
 const AUTH_USER = process.env.AUTH_USER;
 const AUTH_PASS = process.env.AUTH_PASS;
-
+app.use(express.json());
 app.use((express.static(path.join(__dirname,"public"))));
 app.use(express.urlencoded({ extended: true }));
 
@@ -81,6 +81,7 @@ app.post("/pay", simpleAuthMiddleware,async (req, res) => {
 });
 
 app.post("/alta-nueva", async (req, res) => {
+  console.log(req.body)
   const { telegram_id, usuario, nombre } = req.body;
 
   try {
@@ -151,5 +152,5 @@ app.get('/logout', (req, res) => {
 });
 
 app.listen(process.env.PORT, () => {
-  console.log(`🚀 Admin panel en http://localhost:${process.env.PORT}`);
+  console.log(`🚀 Admin panel en https://localhost:${process.env.PORT}`);
 });
