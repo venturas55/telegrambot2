@@ -134,16 +134,20 @@ app.post("/activate", simpleAuthMiddleware, async (req, res) => {
   res.redirect("/");
 });
 
-app.post("/remove/:telegram_id", simpleAuthMiddleware, async (req, res) => {
-  const { subscripcion_id } = req.params;
-
+app.post("/remove", simpleAuthMiddleware, async (req, res) => {
+  const { telegram_id } = req.body;
+  console.log(telegram_id);
+    await db.query(`
+    DELETE FROM pagos WHERE telegram_id=?
+  `, [telegram_id]);
+  await db.query(`
+    DELETE FROM subscripciones WHERE telegram_id=?
+  `, [telegram_id]);
   await db.query(`
     DELETE FROM usuarios WHERE telegram_id=?
   `, [telegram_id]);
-  
-    await db.query(`
-    DELETE FROM subscripciones WHERE telegram_id=?
-  `, [telegram_id]);
+
+
 
   res.redirect("/");
 });

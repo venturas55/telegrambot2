@@ -51,8 +51,20 @@ document.querySelectorAll(".btn-activate").forEach(btn => {
         openModal(
             "/activate",
             `¿Activar acceso de ${e.currentTarget.dataset.user} ?`,
-            null,
+            btn.dataset.id,
             btn.dataset.sub
+        );
+    });
+});
+
+/* ACTIVATE */
+document.querySelectorAll(".btn-remove").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        openModal(
+            "/remove",
+            `¿Borrar usuario con id ${e.currentTarget.dataset.user} ?`,
+            btn.dataset.id,
+            null
         );
     });
 });
