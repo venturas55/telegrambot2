@@ -15,7 +15,7 @@
     {{#each pagos}}
     <tr>
       <td class="precio">{{precio}}</td>
-      <td class="fecha" data-raw="{{fechaInputDateTime fecha_pago}}"> {{formatearSp fecha_pago}} </td>
+      <td class="fecha" data-raw="{{fechaInputDateTime fecha_pago}}"> {{formatearSp fecha_pago false}} </td>
       <td>
         <button class="btn-edit" data-id="{{id}}"> ✏️ EDITAR </button>
         <button class="btn-del-payment" data-id="{{id}}"> 🗑️ ELIMINAR </button>

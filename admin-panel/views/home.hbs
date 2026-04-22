@@ -15,11 +15,11 @@
     {{#each users}}
 
     <tr data-href="/pagos/{{telegram_id}}">
-      <td> <strong> {{username}} </strong></td>
-      <td>{{telegram_id}}</td>
+      <td class="center"> <strong> {{username}} </strong></td>
+      <td class="center">{{telegram_id}}</td>
       <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}">{{estado}}</td>
       <td class="center expira" data-id="{{subscripcion_id}}" data-raw="{{fechaInputDateTime end_date}}">
-        {{formatearSp end_date}}
+          {{timeago end_date}} ({{formatearSp end_date }})
       </td>
       <td class="actions">
         <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">

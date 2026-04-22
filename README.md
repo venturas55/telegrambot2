@@ -7,8 +7,8 @@
 
 ## En la carpeta admin-panel 
     Se encuentra otro proyecto en nodejs con express para gestionar los usuarios.
-    TODO: Ver los pagos de cada usuario. y Total pagado por usuario y global.   
-    TODO: "Expira en..." handlebars
+    TODO: Ver Total pagado por usuario y global.   
+    "Expira en..." handlebars
 
 ## En la carpeta tasker
     Captuas de como se configura la automatización mediante la app tasker.
