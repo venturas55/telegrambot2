@@ -59,6 +59,24 @@ app.get("/", simpleAuthMiddleware, async (req, res) => {
   res.render("home", { users });
 });
 
+app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
+  const { telegram_id } = req.params;
+  const [pagos] = await db.query(`
+    SELECT * FROM pagos where telegram_id=?`,[telegram_id]);
+      const [[usuario]] = await db.query(`
+    SELECT * FROM usuarios where telegram_id=?`,[telegram_id]);
+
+  res.render("pagos", { pagos,usuario  });
+});
+app.post("/delPayment", simpleAuthMiddleware, async (req, res) => {
+  const { subscripcion_id } = req.body;
+  console.log(subscripcion_id);
+   await db.query(`
+    DELETE FROM pagos where id= ? `,  [subscripcion_id]);
+ 
+  res.redirect("/");
+});
+
 /**
  * REGISTRAR PAGO + EXTENDER SUBSCRIPCION
  */

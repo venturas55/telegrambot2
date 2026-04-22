@@ -1,0 +1,46 @@
+<h1>👤 Usuarios</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Precio</th>
+      <th>Fecha de Pago</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+ <h2>Todos los pagos de {{usuario.username}} {{usuario.nombre}} con id {{usuario.telegram_id}}</h2>
+  <tbody>
+    {{#each pagos}}
+    <tr>
+      <td>{{precio}}</td>
+      <td>{{formatearSp fecha_pago}}</td>
+      <td>
+        <button class="btn-edit-payment" data-id="{{id}}" data-telegram="{{telegram_id}}" data-name="{{../usuario.username}}">
+          ✏️ EDITAR
+        </button>
+          <button  class="btn-del-payment" data-id="{{id}}" data-telegram="{{telegram_id}}" data-name="{{../usuario.username}}">
+          🗑️ ELIMINAR
+        </button>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<form action="/logout" method="POST">
+  <button type="submit" class="btn-revoke">Log out</button>
+</form>
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <p id="modal-text"></p>
+
+    <form id="modal-form" method="POST">
+      <input type="hidden" name="telegram_id" id="telegram_id">
+      <input type="hidden" name="subscripcion_id" id="subscripcion_id">
+
+      <button type="submit">Confirmar</button>
+      <button type="button" onclick="closeModal()">Cancelar</button>
+    </form>
+  </div>
+</div>
+

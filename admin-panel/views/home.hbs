@@ -13,38 +13,39 @@
 
   <tbody>
     {{#each users}}
-    <tr>
-      <td>{{username}}</td>
-      <td>{{telegram_id}}</td>
-      <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}    ">{{estado}}</td>
-      <td class="center">{{formatearSp end_date}}</td>
-      <td class="actions">
-        <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
-          💳 Pago
-        </button>
-        {{#if has_access}}
-        <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
-          🚫 Revocar
-        </button>
-        {{else}}
-        <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
-          ✅ Activar
-        </button>
-          <button class="btn-remove" data-sub="{{subscripcion_id}}" data-user="{{username}}" data-id="{{telegram_id}}">
-          🗑️ ELIMINAR
-        </button>
-        {{/if}}
 
-      </td>
-    </tr>
+      <tr>
+        <td>    <a href="/pagos/{{telegram_id}}">{{username}}</a></td>
+        <td>{{telegram_id}}</td>
+        <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}">{{estado}}</td>
+        <td class="center">{{formatearSp end_date}}</td>
+        <td class="actions">
+          <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+            💳 Pago
+          </button>
+          {{#if has_access}}
+          <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+            🚫 Revocar
+          </button>
+          {{else}}
+          <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+            ✅ Activar
+          </button>
+          <button class="btn-remove" data-sub="{{subscripcion_id}}" data-user="{{username}}" data-id="{{telegram_id}}">
+            🗑️ ELIMINAR
+          </button>
+          {{/if}}
+
+        </td>
+      </tr>
     {{/each}}
   </tbody>
 </table>
-  <a href="/logout">
-    <button class="btn-revoke">
-      Log out
-    </button>
-  </a>
+<a href="/logout">
+  <button class="btn-revoke">
+    Log out
+  </button>
+</a>
 <!-- MODAL -->
 <div id="modal" class="modal hidden">
   <div class="modal-content">
@@ -59,4 +60,3 @@
     </form>
   </div>
 </div>
-

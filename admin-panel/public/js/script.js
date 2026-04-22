@@ -57,7 +57,7 @@ document.querySelectorAll(".btn-activate").forEach(btn => {
     });
 });
 
-/* ACTIVATE */
+/* REMOVE */
 document.querySelectorAll(".btn-remove").forEach(btn => {
     btn.addEventListener("click", (e) => {
         openModal(
@@ -65,6 +65,30 @@ document.querySelectorAll(".btn-remove").forEach(btn => {
             `¿Borrar usuario con id ${e.currentTarget.dataset.user} ?`,
             btn.dataset.id,
             null
+        );
+    });
+});
+
+/* EDITPAY */
+document.querySelectorAll(".btn-edit-payment").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        openModal(
+            "/delPayment",
+            `¿Estas seguro que deseas editar el pago de ${e.currentTarget.dataset.name} ?`,
+            btn.dataset.id,
+            null
+        );
+    });
+});
+
+/* REMOVEPAY */
+document.querySelectorAll(".btn-del-payment").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        openModal(
+            "/delPayment",
+             `¿Estas seguro que deseas borrar el pago de ${e.currentTarget.dataset.name} ?`,
+            null,
+            btn.dataset.id
         );
     });
 });
