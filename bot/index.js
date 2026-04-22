@@ -31,11 +31,15 @@ cron.schedule('0 8 * * *', async () => {
     const [rows] = await pool.query(`
       SELECT telegram_id, end_date
       FROM subscripciones
-      WHERE estado = 'activo'
-      end_date >= NOW()
+      WHERE estado = 'activo' 
+      AND end_date >= NOW()
       AND end_date <= DATE_ADD(NOW(), INTERVAL 5 DAY)
     `);
 
+    const ahora = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "Europe/Madrid" })
+    );
+    
     for (const user of rows) {
       const fechaFormateada = new Date(user.end_date).toLocaleString('es-ES', {
         timeZone: 'Europe/Madrid',
@@ -46,7 +50,24 @@ cron.schedule('0 8 * * *', async () => {
         minute: '2-digit'
       });
       const chatId = user.telegram_id;
-      const mensaje = `⚠️ Tu suscripción expira pronto.\n\n📅 Fecha de expiración: ${fechaFormateada}\n\nRenueva para no perder acceso.`;
+
+
+      const fin = new Date(user.end_date);
+      if (fin <= ahora) continue;
+
+      const diffMs = fin - ahora;
+      const diasRestantes = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+      let textoDias;
+      if (diasRestantes > 1) {
+        textoDias = `⏳ Faltan ${diasRestantes} días`;
+      } else if (diasRestantes === 1) {
+        textoDias = `⏳ Falta 1 día`;
+      } else {
+        textoDias = `🚨 Vence hoy`;
+      }
+
+      const mensaje = `⚠️ Tu suscripción expira pronto.\n${textoDias}\n📅 Fecha de expiración: ${fechaFormateada}\n\nRenueva para no perder acceso.`;
       try {
         await bot.sendMessage(chatId, mensaje);
       } catch (e) {
