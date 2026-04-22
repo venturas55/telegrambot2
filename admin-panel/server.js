@@ -62,18 +62,18 @@ app.get("/", simpleAuthMiddleware, async (req, res) => {
 app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id } = req.params;
   const [pagos] = await db.query(`
-    SELECT * FROM pagos where telegram_id=?`,[telegram_id]);
-      const [[usuario]] = await db.query(`
-    SELECT * FROM usuarios where telegram_id=?`,[telegram_id]);
+    SELECT * FROM pagos where telegram_id=?`, [telegram_id]);
+  const [[usuario]] = await db.query(`
+    SELECT * FROM usuarios where telegram_id=?`, [telegram_id]);
 
-  res.render("pagos", { pagos,usuario  });
+  res.render("pagos", { pagos, usuario });
 });
 app.post("/delPayment", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
   console.log(subscripcion_id);
-   await db.query(`
-    DELETE FROM pagos where id= ? `,  [subscripcion_id]);
- 
+  await db.query(`
+    DELETE FROM pagos where id= ? `, [subscripcion_id]);
+
   res.redirect("/");
 });
 
@@ -96,6 +96,30 @@ app.post("/pay", simpleAuthMiddleware, async (req, res) => {
   `, [subscripcion_id]);
 
   res.redirect("/");
+});
+
+app.post("/editPayment", simpleAuthMiddleware, async (req, res) => {
+  const { id, precio, fecha_pago } = req.body;
+
+  await db.query(`
+    UPDATE pagos
+    SET precio = ?, fecha_pago = ?
+    WHERE id = ?
+  `, [precio, fecha_pago, id]);
+
+  res.json({ ok: true });
+});
+
+app.post("/update-expira", simpleAuthMiddleware, async (req, res) => {
+  const { id, end_date } = req.body;
+
+  await db.query(`
+    UPDATE subscripciones
+    SET end_date = ?
+    WHERE id = ?
+  `, [end_date, id]);
+
+  res.json({ ok: true });
 });
 
 app.post("/alta-nueva", async (req, res) => {
@@ -130,12 +154,17 @@ app.post("/alta-nueva", async (req, res) => {
 
 app.post("/revoke", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
-
+  console.log("voy");
   await db.query(`
     UPDATE subscripciones
     SET estado='inactivo'
     WHERE id=?
   `, [subscripcion_id]);
+
+  const [[usuario]] = await db.query(`
+  SELECT * FROM usuarios u left join subscripciones s on u.telegram_id=s.telegram_id WHERE id=?
+`, [subscripcion_id]);
+  console.log(usuario)
 
   res.redirect("/");
 });
@@ -155,7 +184,7 @@ app.post("/activate", simpleAuthMiddleware, async (req, res) => {
 app.post("/remove", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id } = req.body;
   console.log(telegram_id);
-    await db.query(`
+  await db.query(`
     DELETE FROM pagos WHERE telegram_id=?
   `, [telegram_id]);
   await db.query(`

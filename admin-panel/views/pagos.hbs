@@ -1,3 +1,5 @@
+<button class="btn-active" onclick="history.back()">VOLVER</button>
+
 <h1>👤 Usuarios</h1>
 
 <table>
@@ -8,19 +10,15 @@
       <th>Acciones</th>
     </tr>
   </thead>
- <h2>Todos los pagos de {{usuario.username}} {{usuario.nombre}} con id {{usuario.telegram_id}}</h2>
+  <h2>Todos los pagos de {{usuario.username}} {{usuario.nombre}} con id {{usuario.telegram_id}}</h2>
   <tbody>
     {{#each pagos}}
     <tr>
-      <td>{{precio}}</td>
-      <td>{{formatearSp fecha_pago}}</td>
+      <td class="precio">{{precio}}</td>
+      <td class="fecha" data-raw="{{fechaInputDateTime fecha_pago}}"> {{formatearSp fecha_pago}} </td>
       <td>
-        <button class="btn-edit-payment" data-id="{{id}}" data-telegram="{{telegram_id}}" data-name="{{../usuario.username}}">
-          ✏️ EDITAR
-        </button>
-          <button  class="btn-del-payment" data-id="{{id}}" data-telegram="{{telegram_id}}" data-name="{{../usuario.username}}">
-          🗑️ ELIMINAR
-        </button>
+        <button class="btn-edit" data-id="{{id}}"> ✏️ EDITAR </button>
+        <button class="btn-del-payment" data-id="{{id}}"> 🗑️ ELIMINAR </button>
       </td>
     </tr>
     {{/each}}
@@ -44,3 +42,55 @@
   </div>
 </div>
 
+<script>
+  document.querySelectorAll(".btn-edit").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const tr = this.closest("tr");
+
+      const tdPrecio = tr.querySelector(".precio");
+      const tdFecha = tr.querySelector(".fecha");
+      const acciones = this.parentElement;
+
+      const precioActual = tdPrecio.innerText;
+      const fechaActual = tdFecha.dataset.raw; // formato YYYY-MM-DD
+
+      // Convertir a inputs
+      tdPrecio.innerHTML = `<input type="number" value="${precioActual}" style="width:80px">`;
+      tdFecha.innerHTML = `<input type="datetime-local" value="${fechaActual}">`;
+
+      // Cambiar botones
+      acciones.innerHTML = `
+      <button class="btn-save">💾 Guardar</button>
+      <button class="btn-cancel">❌ Cancelar</button>
+    `;
+
+      // SAVE
+      acciones.querySelector(".btn-save").addEventListener("click", async () => {
+        const nuevoPrecio = tdPrecio.querySelector("input").value;
+        const nuevaFecha = tdFecha.querySelector("input").value;
+
+        const id = btn.dataset.id;
+
+        await fetch("/editPayment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id,
+            precio: nuevoPrecio,
+            fecha_pago: nuevaFecha
+          })
+        });
+
+        location.reload(); // simple y efectivo
+      });
+
+      // CANCEL
+      acciones.querySelector(".btn-cancel").addEventListener("click", () => {
+        location.reload();
+      });
+
+    });
+  });
+</script>

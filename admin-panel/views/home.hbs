@@ -14,30 +14,32 @@
   <tbody>
     {{#each users}}
 
-      <tr>
-        <td>    <a href="/pagos/{{telegram_id}}">{{username}}</a></td>
-        <td>{{telegram_id}}</td>
-        <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}">{{estado}}</td>
-        <td class="center">{{formatearSp end_date}}</td>
-        <td class="actions">
-          <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
-            💳 Pago
-          </button>
-          {{#if has_access}}
-          <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
-            🚫 Revocar
-          </button>
-          {{else}}
-          <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
-            ✅ Activar
-          </button>
-          <button class="btn-remove" data-sub="{{subscripcion_id}}" data-user="{{username}}" data-id="{{telegram_id}}">
-            🗑️ ELIMINAR
-          </button>
-          {{/if}}
+    <tr data-href="/pagos/{{telegram_id}}">
+      <td> <strong> {{username}} </strong></td>
+      <td>{{telegram_id}}</td>
+      <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}">{{estado}}</td>
+      <td class="center expira" data-id="{{subscripcion_id}}" data-raw="{{fechaInputDateTime end_date}}">
+        {{formatearSp end_date}}
+      </td>
+      <td class="actions">
+        <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+          💳 Pago
+        </button>
+        {{#if has_access}}
+        <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+          🚫 Revocar
+        </button>
+        {{else}}
+        <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+          ✅ Activar
+        </button>
+        <button class="btn-remove" data-sub="{{subscripcion_id}}" data-user="{{username}}" data-id="{{telegram_id}}">
+          🗑️ ELIMINAR
+        </button>
+        {{/if}}
 
-        </td>
-      </tr>
+      </td>
+    </tr>
     {{/each}}
   </tbody>
 </table>
@@ -60,3 +62,68 @@
     </form>
   </div>
 </div>
+
+<script>
+  document.querySelectorAll("tbody tr").forEach(row => {
+    row.addEventListener("click", function (e) {
+      // Evita que los botones disparen la navegación
+      if (e.target.closest("button") || e.target.closest("input")) return;
+
+      const url = this.dataset.href;
+      if (url) {
+        window.location.href = url;
+      }
+    });
+  });
+
+
+
+  //EDICION DE FECHA EXPIRACION
+  document.querySelectorAll(".expira").forEach(td => {
+    td.addEventListener("click", function (e) {
+      e.stopPropagation();
+      // Evita doble click o conflicto con botones
+      if (this.querySelector("input")) return;
+
+      const valorOriginal = this.dataset.raw;
+      const subId = this.dataset.id;
+
+      // Crear input
+      this.innerHTML = `<input type="datetime-local" value="${valorOriginal}">`;
+      const input = this.querySelector("input");
+      input.focus();
+
+      // GUARDAR
+      const guardar = async () => {
+        const nuevaFecha = input.value;
+
+        if (!nuevaFecha) {
+          this.innerHTML = this.dataset.raw;
+          return;
+        }
+
+        await fetch("/update-expira", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: subId,
+            end_date: nuevaFecha
+          })
+        });
+
+        location.reload();
+      };
+
+      // Eventos
+      input.addEventListener("blur", guardar);
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") guardar();
+        if (e.key === "Escape") location.reload();
+      });
+    });
+  });
+  //FIN DE EDICION FECHA EXPIRACION
+</script>

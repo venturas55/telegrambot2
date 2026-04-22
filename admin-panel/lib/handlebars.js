@@ -11,4 +11,26 @@ helpers.formatearSp = (fecha) => {
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
 
+helpers.fechaInput = (fecha) => {
+  if (!fecha) return "";
+
+  const d = new Date(fecha);
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+helpers.fechaInputDateTime = (fecha) => {
+  if (!fecha) return "";
+
+  const d = new Date(fecha);
+
+  const pad = (n) => String(n).padStart(2, "0");
+
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
 export default helpers;
