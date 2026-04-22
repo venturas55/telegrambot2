@@ -28,12 +28,12 @@ const bot = initTelegram(BOT_TOKEN);
 // ==============================================
 cron.schedule('0 8 * * *', async () => {
   try {
-    const [rows] = await db.query(`
+    const [rows] = await pool.query(`
       SELECT telegram_id, end_date
       FROM subscripciones
       WHERE estado = 'activo'
-        AND end_date IS NOT NULL
-        AND end_date BETWEEN NOW() AND NOW() + INTERVAL 5 DAY
+      end_date >= NOW()
+      AND end_date <= DATE_ADD(NOW(), INTERVAL 5 DAY)
     `);
 
     for (const user of rows) {
@@ -47,7 +47,11 @@ cron.schedule('0 8 * * *', async () => {
       });
       const chatId = user.telegram_id;
       const mensaje = `⚠️ Tu suscripción expira pronto.\n\n📅 Fecha de expiración: ${fechaFormateada}\n\nRenueva para no perder acceso.`;
-      await bot.sendMessage(chatId, mensaje);
+      try {
+        await bot.sendMessage(chatId, mensaje);
+      } catch (e) {
+        console.warn(`No se pudo enviar a ${chatId}`);
+      }
     }
 
     console.log(`Avisos enviados: ${rows.length}`);
@@ -134,9 +138,9 @@ bot.on('callback_query', (query) => {
     }
 
     const playa = estado.playa;
-
+    const nombre = [query.from.first_name, query.from.last_name].filter(Boolean).join(" ");
     // 👉 Ejecutar lógica
-    procesarPeticion(bot, userId, chatId, query.from.first_name + " " + query.from.last_name, playa, dia);
+    procesarPeticion(bot, userId, chatId, nombre, playa, dia);
 
     // 👉 EDITAR el mensaje y quitar botones
     bot.editMessageText(
