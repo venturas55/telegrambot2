@@ -92,3 +92,54 @@ export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {
     console.error(error);
   }
 }
+
+async function hayVientoFuerteEnHorario(data) {
+  const times = data?.hourly?.time;
+  const wind = data?.hourly?.wind_speed_10m;
+
+  if (!Array.isArray(times) || !Array.isArray(wind)) {
+    console.error("Estructura inválida:", data);
+    return "mocos";
+  }
+
+  let nivel = "mocos";
+
+  for (let i = 0; i < 24; i++) {
+    const hour = new Date(times[i]).getHours();
+
+    if (hour >= 8 && hour <= 20) {
+      if (wind[i] > 18) {
+        return "nosferatu"; // máximo, salimos ya
+      } else if (wind[i] > 12) {
+        nivel = "fiesta";
+      } else if (wind[i] > 8 && nivel === "mocos") {
+        nivel = "foil";
+      }
+    }
+  }
+
+  return nivel;
+}
+
+export async function alertas(playa, modelo) {
+  const res = await fetch(`https://guardiandelfaro.es/weather_controller.php?playa=${playa}&modelo=${modelo}`);
+  const data = await res.json();
+  return await hayVientoFuerteEnHorario(data);
+
+}
+
+export function mensajeViento(nivel) {
+  switch (nivel) {
+    case "nosferatu":
+      return "🧛‍♂️ Viento salvaje. Saca la pequeña y reza para no salir volando.";
+
+    case "fiesta":
+      return "🎉 Día fino. Viento perfecto para una buena sesión.";
+
+    case "foil":
+      return "🪶 Flojito, pero el foil te salva el día.";
+
+    default:
+      return "🥲 Hoy ni foil ni milagros… toca mirar el mar.";
+  }
+}

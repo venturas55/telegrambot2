@@ -5,12 +5,14 @@ import 'dayjs/locale/es.js';
 import { initTelegram } from './services/telegram.js';
 import {
   MY_CHAT_ID,
+  ADMIN_ID,
   BOT_TOKEN,
   DIAS_VALIDOS,
   HELP,
   estadoUsuarios,
   procesarPeticion,
-  logAccion
+  logAccion,
+  alertas
 } from './config.js';
 import { normalizar, parseInput } from './utils.js';
 
@@ -39,7 +41,8 @@ cron.schedule('0 8 * * *', async () => {
     const ahora = new Date(
       new Date().toLocaleString("en-US", { timeZone: "Europe/Madrid" })
     );
-    
+
+    //AVISOS DE EXPIRACION DE LA SUSCRIPCION
     for (const user of rows) {
       const fechaFormateada = new Date(user.end_date).toLocaleString('es-ES', {
         timeZone: 'Europe/Madrid',
@@ -75,7 +78,14 @@ cron.schedule('0 8 * * *', async () => {
       }
     }
 
-    console.log(`Avisos enviados: ${rows.length}`);
+    //ENVIO DE ALERTAS
+    const nivel = await alertas("mareny", "openmeteo");
+    const mensaje = mensajeViento(nivel);
+
+    bot.sendMessage(MY_CHAT_ID, mensaje);
+
+
+    //console.log(`Avisos enviados: ${rows.length}`);
   } catch (err) {
     console.error('Error en cron:', err);
   }
