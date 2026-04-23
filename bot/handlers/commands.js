@@ -20,23 +20,23 @@ export const handleCommands = (bot, msg) => {
   }
 
   if (texto === "/cam") {
-    bot.sendMessage(chatId, "Selecciona una cámara (experimental):", {
+    return bot.sendMessage(chatId, "📡 Selecciona una cámara disponible (modo experimental):", {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: "Patacona ", url: "http://guardiandelfaro.es/cam/alboraya.html" }
+            { text: "🌊 Patacona", url: "http://guardiandelfaro.es/cam/alboraya.html" }
           ],
           [
-            { text: "Pobla Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
+            { text: "🏝️ Pobla de Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
           ],
           [
-            { text: "Altea", url: "http://guardiandelfaro.es/cam/altea.html" }
+            { text: "🌅 Altea", url: "http://guardiandelfaro.es/cam/altea.html" }
           ]
         ]
       }
     });
-    return true;
   }
+
 
   if (texto === "/start" || texto === "/help") {
     bot.sendMessage(chatId, HELP);
