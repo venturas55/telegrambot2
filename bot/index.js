@@ -165,7 +165,7 @@ bot.on('callback_query', (query) => {
 
     // 👉 EDITAR el mensaje y quitar botones
     bot.editMessageText(
-      `✅ Pedido enviado\n\n🏖️ Playa: ${playa}\n📅 Día: ${dia}`,
+      `✅ Solicitud enviado\n\n🏖️ Playa: ${playa}\n📅 Día: ${dia}`,
       {
         chat_id: chatId,
         message_id: query.message.message_id

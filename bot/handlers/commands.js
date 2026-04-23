@@ -5,7 +5,7 @@ export const handleCommands = (bot, msg) => {
   //console.log("MSG:",msg);
   const chatId = msg.chat.id;
   const userId = msg.from.id;
-  const user = msg.from.first_name + msg.from.last_name ;
+  const user = msg.from.first_name + msg.from.last_name;
   const texto = msg.text;
 
   if (texto === "/general") {
@@ -16,6 +16,25 @@ export const handleCommands = (bot, msg) => {
 
   if (texto === "/playa") {
     mostrarPlayas(bot, chatId);
+    return true;
+  }
+
+  if (texto === "/cam") {
+    bot.sendMessage(chatId, "Selecciona una cámara (experimental):", {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: "Patacona ", url: "http://guardiandelfaro.es/cam/alboraya.html" }
+          ],
+          [
+            { text: "Pobla Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
+          ],
+          [
+            { text: "Altea", url: "http://guardiandelfaro.es/cam/alteo.html" }
+          ]
+        ]
+      }
+    });
     return true;
   }
 
