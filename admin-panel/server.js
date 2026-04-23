@@ -7,6 +7,7 @@ import helpers from './lib/handlebars.js';
 import { simpleAuthMiddleware } from './lib/funciones.js';
 import * as path from "path";
 import * as url from "url";
+import { bot } from "./services/telegram.js"
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 const app = express();
@@ -36,10 +37,7 @@ app.use(session({
 // IMPORTANTE: después de session
 app.use(simpleAuthMiddleware);
 
-/**
- * LISTADO PRINCIPAL
- */
-
+//LISTADO PRINCIPAL DE USUARIOS
 app.get("/", simpleAuthMiddleware, async (req, res) => {
   const [users] = await db.query(`
     SELECT 
@@ -59,6 +57,7 @@ app.get("/", simpleAuthMiddleware, async (req, res) => {
   res.render("home", { users });
 });
 
+//RUTA PARA VER LOS PAGOS DE UN USUARIO
 app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id } = req.params;
   const [pagos] = await db.query(`
@@ -68,6 +67,8 @@ app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
 
   res.render("pagos", { pagos, usuario });
 });
+
+//BORRAR UN PAGO
 app.post("/delPayment", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
   console.log(subscripcion_id);
@@ -77,9 +78,7 @@ app.post("/delPayment", simpleAuthMiddleware, async (req, res) => {
   res.redirect("/");
 });
 
-/**
- * REGISTRAR PAGO + EXTENDER SUBSCRIPCION
- */
+//AÑADIR UN PAGO Y EXTENDER SUSCRIPCION UN MES MAS DE LA FECHA NOW()
 app.post("/pay", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id, subscripcion_id } = req.body;
 
@@ -98,6 +97,7 @@ app.post("/pay", simpleAuthMiddleware, async (req, res) => {
   res.redirect("/");
 });
 
+//EDITAR UN PAGO
 app.post("/editPayment", simpleAuthMiddleware, async (req, res) => {
   const { id, precio, fecha_pago } = req.body;
 
@@ -110,6 +110,7 @@ app.post("/editPayment", simpleAuthMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
+//ACTUALIZAR FECHA DE EXPIRACION DE SUSCRIPCION
 app.post("/update-expira", simpleAuthMiddleware, async (req, res) => {
   const { id, end_date } = req.body;
 
@@ -122,6 +123,7 @@ app.post("/update-expira", simpleAuthMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
+//CREA UN USUARIO
 app.post("/alta-nueva", async (req, res) => {
   console.log(req.body)
   const { telegram_id, usuario, nombre } = req.body;
@@ -152,6 +154,7 @@ app.post("/alta-nueva", async (req, res) => {
   }
 });
 
+//REVOCAR ACCESO A UN USUARIO
 app.post("/revoke", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
   console.log("voy");
@@ -169,6 +172,7 @@ app.post("/revoke", simpleAuthMiddleware, async (req, res) => {
   res.redirect("/");
 });
 
+//ACTIVAR ACCESO A UN USUARIO
 app.post("/activate", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
 
@@ -181,6 +185,7 @@ app.post("/activate", simpleAuthMiddleware, async (req, res) => {
   res.redirect("/");
 });
 
+// ELIMINAR UN USUARIO (Y SUS PAGOS Y SUSCRIPCIONES)
 app.post("/remove", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id } = req.body;
   console.log(telegram_id);
@@ -199,11 +204,33 @@ app.post("/remove", simpleAuthMiddleware, async (req, res) => {
   res.redirect("/");
 });
 
-//rutras para login
+//RUTA PARA VISTA DE LOGIN
 app.get('/login', (req, res) => {
   res.render('login', { error: null });
 });
 
+// Enviar broadcast
+app.post('/broadcast', async (req, res) => {
+  const message = req.body.message;
+  const [users] = await db.query(`SELECT telegram_id FROM usuarios`);
+  for (const user of users) {
+    const chatId = user.telegram_id;
+    try {
+      await bot.sendMessage(chatId, message);
+      await new Promise(r => setTimeout(r, 50)); // evitar rate limit
+    } catch (e) {
+      console.log(`Error con ${chatId}`);
+      if (e.response?.statusCode === 403) {
+        // Usuario bloqueó el bot → eliminar
+        await db.query(`DELETE FROM usuarios WHERE telegram_id = ?`, [chatId]);
+      }
+    }
+  }
+
+  res.redirect('/');
+});
+
+//RUTA PARA LOGIN
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -215,6 +242,7 @@ app.post('/login', (req, res) => {
   res.render('login', { error: 'Credenciales incorrectas' });
 });
 
+//RUTA PARA LOGOUT
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/login');

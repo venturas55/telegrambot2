@@ -19,7 +19,7 @@
       <td class="center">{{telegram_id}}</td>
       <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}">{{estado}}</td>
       <td class="center expira" data-id="{{subscripcion_id}}" data-raw="{{fechaInputDateTime end_date}}">
-          {{timeago end_date}} ({{formatearSp end_date }})
+        {{timeago end_date}} ({{formatearSp end_date }})
       </td>
       <td class="actions">
         <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
@@ -43,6 +43,24 @@
     {{/each}}
   </tbody>
 </table>
+<div class="card">
+  <h2>📢 Enviar broadcast</h2>
+
+  <form method="POST" action="/broadcast">
+    <textarea name="message" placeholder="Escribe el mensaje para todos los usuarios..." required>
+    </textarea>
+
+    <button type="submit" class="btn-broadcast">
+      Enviar mensaje
+    </button>
+  </form>
+
+  {{#if success}}
+  <div class="alert-success">
+    Mensaje enviado correctamente
+  </div>
+  {{/if}}
+</div>
 <a href="/logout">
   <button class="btn-revoke">
     Log out
