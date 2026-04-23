@@ -30,7 +30,7 @@ export const handleCommands = (bot, msg) => {
             { text: "Pobla Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
           ],
           [
-            { text: "Altea", url: "http://guardiandelfaro.es/cam/alteo.html" }
+            { text: "Altea", url: "http://guardiandelfaro.es/cam/altea.html" }
           ]
         ]
       }
