@@ -68,19 +68,38 @@ export const handleCommands = async (bot, msg) => {
   }
 
   if (texto === "/avisos") {
+    let [configuracion] = await db.query(`SELECT * FROM  configuraciones where telegram_id=?`, [userId]);
+    configuracion=configuracion[0];
+    let texto;
+    let botones;
+    let hora=(configuracion.hora_aviso).substr(0,5)
+    if (configuracion.alarmas) {
+      texto = `📝 Tienes la configuración de avisos activada a las ${hora}`;
+      botones = [
+        [
+          { text: "❌ Desactivar", callback_data: "avisos:desactivar" }
+        ],
+        [
+          { text: "⏰ Cambiar hora", callback_data: "avisos:cambiar_hora" }
+        ]
+      ]
+    }else{
+      texto = `📝 Tienes la configuración de avisos desactivada`;
+      botones = [
+        [
+            { text: "✅ Activar", callback_data: "avisos:activar" },
+        ],
+        [
+          { text: "⏰ Cambiar hora", callback_data: "avisos:cambiar_hora" }
+        ]
+      ]
+    }
+
     bot.sendMessage(chatId,
-      "📝 Configuración de avisos:",
+      texto,
       {
         reply_markup: {
-          inline_keyboard: [
-            [
-              { text: "✅ Activar", callback_data: "avisos:activar" },
-              { text: "❌ Desactivar", callback_data: "avisos:desactivar" }
-            ],
-            [
-              { text: "⏰ Cambiar hora", callback_data: "avisos:cambiar_hora" }
-            ]
-          ]
+          inline_keyboard: botones
         }
       }
     );
