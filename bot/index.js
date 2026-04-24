@@ -12,7 +12,8 @@ import {
   estadoUsuarios,
   procesarPeticion,
   logAccion,
-  alertas
+  alertas,
+  mensajeViento
 } from './config.js';
 import { normalizar, parseInput } from './utils.js';
 
@@ -20,7 +21,7 @@ import { checkAccess } from './middlewares/auth.js';
 import { handleCommands } from './handlers/commands.js';
 
 import cron from "node-cron";
-import pool from "./services/db.js";
+import db from "./services/db.js";
 dayjs.locale('es');
 
 const bot = initTelegram(BOT_TOKEN);
@@ -30,7 +31,7 @@ const bot = initTelegram(BOT_TOKEN);
 // ==============================================
 cron.schedule('0 8 * * *', async () => {
   try {
-    const [rows] = await pool.query(`
+    const [suscripciones] = await db.query(`
       SELECT telegram_id, end_date
       FROM subscripciones
       WHERE estado = 'activo' 
@@ -38,12 +39,13 @@ cron.schedule('0 8 * * *', async () => {
       AND end_date <= DATE_ADD(NOW(), INTERVAL 5 DAY)
     `);
 
+
     const ahora = new Date(
       new Date().toLocaleString("en-US", { timeZone: "Europe/Madrid" })
     );
 
     //AVISOS DE EXPIRACION DE LA SUSCRIPCION
-    for (const user of rows) {
+    for (const user of suscripciones) {
       const fechaFormateada = new Date(user.end_date).toLocaleString('es-ES', {
         timeZone: 'Europe/Madrid',
         day: '2-digit',
@@ -53,11 +55,8 @@ cron.schedule('0 8 * * *', async () => {
         minute: '2-digit'
       });
       const chatId = user.telegram_id;
-
-
       const fin = new Date(user.end_date);
       if (fin <= ahora) continue;
-
       const diffMs = fin - ahora;
       const diasRestantes = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
@@ -79,15 +78,38 @@ cron.schedule('0 8 * * *', async () => {
     }
 
     //ENVIO DE ALERTAS
-    const nivel = await alertas("mareny", "openmeteo");
-    const mensaje = mensajeViento(nivel);
-
-    bot.sendMessage(MY_CHAT_ID, mensaje);
-
+    const [configuraciones] = await db.query(`SELECT c.telegram_id,c.alarmas,c.hora_aviso,p.nombre as playa,m.nombre as modelo FROM configuraciones c LEFT JOIN playas p on c.playa_id=p.id LEFT JOIN modelos m ON m.id=c.modelo_id WHERE alarmas = 1 `);
+    for (const user of suscripciones) {
+      const nivel = await alertas(user.playa, user.modelo);
+      const mensaje = mensajeViento(nivel);
+      bot.sendMessage(user.telegram_id, mensaje);
+    }
 
     //console.log(`Avisos enviados: ${rows.length}`);
   } catch (err) {
     console.error('Error en cron:', err);
+  }
+});
+
+// ==============================================
+// 💬NODE CRON PARA NOTIFICAR ALARMAS
+// ==============================================
+
+cron.schedule('0,15,30,45 * * * *', async () => {
+  const ahora = new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Madrid" }));
+  const horaActual = ahora.toTimeString().slice(0, 5); // "HH:MM"
+
+  try {
+    const [configuraciones] = await db.query(`SELECT c.telegram_id,c.alarmas,c.hora_aviso,p.nombre as playa,m.nombre as modelo FROM configuraciones c LEFT JOIN playas p on c.playa_id=p.id LEFT JOIN modelos m ON m.id=c.modelo_id WHERE alarmas = 1 AND hora_aviso IS NOT NULL`);
+    for (const user of configuraciones) {
+      if (user.hora_aviso.slice(0, 5) === horaActual) {
+        const nivel = await alertas(user.playa, user.modelo);
+        const mensaje = mensajeViento(nivel);
+        await bot.sendMessage(user.telegram_id, mensaje);
+      }
+    }
+  } catch (err) {
+    console.error('Error enviando avisos:', err);
   }
 });
 
@@ -118,7 +140,7 @@ bot.on('message', async (msg) => {
   await checkAccess(bot, msg, async () => {
 
     // 👉 comandos
-    const handled = handleCommands(bot, msg);
+    const handled = await handleCommands(bot, msg);
     if (handled) return;
 
     // 👉 lógica actual
@@ -135,7 +157,7 @@ bot.on('message', async (msg) => {
 // 🔘 CALLBACK BOTONES
 // ======================
 
-bot.on('callback_query', (query) => {
+bot.on('callback_query', async (query) => {
   const user = query.from.username || query.from.first_name || "user";
   const userId = query.from.id;
   const chatId = query.message.chat.id;
@@ -184,6 +206,45 @@ bot.on('callback_query', (query) => {
     );
     logAccion(query.from.username || query.from.first_name, userId, chatId, `${estado.playa} ${dia} `);
     delete estadoUsuarios[userId];
+  }
+
+  if (data.startsWith("avisos:")) {
+    const accion = data.split(":")[1];
+
+    // ACTIVAR
+    if (accion === "activar") {
+      await db.query(
+        `INSERT INTO configuraciones (telegram_id, alarmas)
+       VALUES (?, TRUE)
+       ON DUPLICATE KEY UPDATE alarmas = TRUE`,
+        [userId]
+      );
+
+      bot.editMessageText("✅ Avisos activados", {
+        chat_id: chatId,
+        message_id: query.message.message_id
+      });
+    }
+
+    // DESACTIVAR
+    if (accion === "desactivar") {
+      await db.query(
+        `UPDATE configuraciones SET alarmas = FALSE WHERE telegram_id = ?`,
+        [userId]
+      );
+
+      bot.editMessageText("❌ Avisos desactivados", {
+        chat_id: chatId,
+        message_id: query.message.message_id
+      });
+    }
+
+    // CAMBIAR HORA
+    if (accion === "cambiar_hora") {
+      estadoUsuarios[userId] = { modo: "hora" };
+
+      bot.sendMessage(chatId, "⏰ Escribe la hora en formato HH:MM (ej: 08:30)");
+    }
   }
 
   bot.answerCallbackQuery(query.id);
