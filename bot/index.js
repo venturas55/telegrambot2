@@ -77,14 +77,6 @@ cron.schedule('0 8 * * *', async () => {
       }
     }
 
-    //ENVIO DE ALERTAS
-    const [configuraciones] = await db.query(`SELECT c.telegram_id,c.alarmas,c.hora_aviso,p.nombre as playa,m.nombre as modelo FROM configuraciones c LEFT JOIN playas p on c.playa_id=p.id LEFT JOIN modelos m ON m.id=c.modelo_id WHERE alarmas = 1 `);
-    for (const user of suscripciones) {
-      const nivel = await alertas(user.playa, user.modelo);
-      const mensaje = mensajeViento(nivel);
-      bot.sendMessage(user.telegram_id, mensaje);
-    }
-
     //console.log(`Avisos enviados: ${rows.length}`);
   } catch (err) {
     console.error('Error en cron:', err);
