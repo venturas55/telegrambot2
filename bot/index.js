@@ -94,7 +94,7 @@ cron.schedule('0,15,30,45 * * * *', async () => {
   try {
     const [configuraciones] = await db.query(`SELECT c.telegram_id,c.alarmas,c.hora_aviso,p.nombre as playa,m.nombre as modelo FROM configuraciones c LEFT JOIN playas p on c.playa_id=p.id LEFT JOIN modelos m ON m.id=c.modelo_id WHERE alarmas = 1 AND hora_aviso IS NOT NULL`);
     for (const user of configuraciones) {
-      if (user.hora_aviso.slice(0, 5) === horaActual) {
+      if (user.hora_aviso.slice(0, 5) === horaActual && c.alarmas) {
         const nivel = await alertas(user.playa, user.modelo);
         const mensaje = mensajeViento(nivel);
         await bot.sendMessage(user.telegram_id, mensaje);
