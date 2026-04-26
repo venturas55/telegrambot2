@@ -93,27 +93,27 @@ export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {
   }
 }
 
-async function hayVientoFuerteEnHorario(data) {
+async function nivelDeViento(data) {
   const times = data?.hourly?.time;
   const wind = data?.hourly?.wind_speed_10m;
 
   if (!Array.isArray(times) || !Array.isArray(wind)) {
     console.error("Estructura inválida:", data);
-    return "mocos";
+    return -1;
   }
 
-  let nivel = "mocos";
+  let nivel = 0;
 
   for (let i = 0; i < 24; i++) {
     const hour = new Date(times[i]).getHours();
 
     if (hour >= 8 && hour <= 20) {
       if (wind[i] > 18) {
-        return "nosferatu"; // máximo, salimos ya
+        return 1; // máximo, salimos ya
       } else if (wind[i] > 12) {
-        nivel = "fiesta";
+        nivel = 2;
       } else if (wind[i] > 8 && nivel === "mocos") {
-        nivel = "foil";
+        nivel = 3;
       }
     }
   }
@@ -121,25 +121,28 @@ async function hayVientoFuerteEnHorario(data) {
   return nivel;
 }
 
-export async function alertas(playa, modelo) {
+export async function fetchNivelDeViento(playa, modelo) {
   const res = await fetch(`https://guardiandelfaro.es/weather_controller.php?playa=${playa}&modelo=${modelo}`);
   const data = await res.json();
-  return await hayVientoFuerteEnHorario(data);
+  return await nivelDeViento(data);
 
 }
 
 export function mensajeViento(nivel) {
   switch (nivel) {
-    case "nosferatu":
+    case 3:
       return "🧛‍♂️ Viento salvaje. Saca la pequeña y reza para no salir volando.";
 
-    case "fiesta":
+    case 2:
       return "🎉 Día fino. Viento perfecto para una buena sesión.";
 
-    case "foil":
+    case 1:
       return "🪶 Flojito, pero el foil te salva el día.";
 
-    default:
+    case 0:
       return "🥲 Hoy ni foil ni milagros… toca mirar el mar.";
+
+    default:
+      return "🥲 Error en la prevision";
   }
 }
