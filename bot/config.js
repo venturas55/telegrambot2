@@ -96,7 +96,6 @@ export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {
 async function nivelDeViento(data) {
   const times = data?.hourly?.time;
   const wind = data?.hourly?.wind_speed_10m;
-
   if (!Array.isArray(times) || !Array.isArray(wind)) {
     console.error("Estructura inválida:", data);
     return -1;
@@ -106,14 +105,14 @@ async function nivelDeViento(data) {
 
   for (let i = 0; i < 24; i++) {
     const hour = new Date(times[i]).getHours();
-
+    console.log(i, hour, wind[i]);
     if (hour >= 8 && hour <= 20) {
       if (wind[i] > 18) {
-        return 1; // máximo, salimos ya
+        return 3; // máximo, salida directa
       } else if (wind[i] > 12) {
-        nivel = 2;
-      } else if (wind[i] > 8 && nivel === "mocos") {
-        nivel = 3;
+        nivel = Math.max(nivel, 2);
+      } else if (wind[i] > 8) {
+        nivel = Math.max(nivel, 1);
       }
     }
   }
