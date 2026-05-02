@@ -109,7 +109,7 @@ export const handleCommands = async (bot, msg) => {
   if (texto === "/sugerencia") {
     estadoUsuarios[userId] = {
       ...estadoUsuarios[userId],
-      modo: "hora"
+      modo: "sugerencia"
     };
 
     bot.sendMessage(chatId, "✍️ Escribe tu sugerencia y se la enviaré al admin.");

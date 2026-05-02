@@ -127,7 +127,7 @@ bot.on('message', async (msg) => {
   const user = msg.from.username || msg.from.first_name || "user";
   const texto = normalizar(msg.text || "");
 
-  logAccion(user, userId, chatId, texto);
+  logAccion(user, userId, chatId, `[INPUT] ${texto}`);
   // 🔐 middleware de acceso
   await checkAccess(bot, msg, async () => {
 
@@ -196,7 +196,7 @@ bot.on('callback_query', async (query) => {
         // ❌ NO reply_markup → elimina botones
       }
     );
-    logAccion(query.from.username || query.from.first_name, userId, chatId, `${estado.playa} ${dia} `);
+    //logAccion(query.from.username || query.from.first_name, userId, chatId, `${estado.playa} ${dia} `);
     delete estadoUsuarios[userId];
   }
 
