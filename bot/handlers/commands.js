@@ -62,7 +62,7 @@ export const handleCommands = async (bot, msg) => {
         bot.sendMessage(chatId, "Error leyendo logs ❌ No estará usando PM2 en el despliegue");
         return true;
       }
-      bot.sendMessage(chatId, `🤖 Logs: \n${data.slice(-500)}`);
+      bot.sendMessage(chatId, `🤖 Logs: \n${data.slice(-600)}`);
     });
     return true;
   }

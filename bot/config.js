@@ -67,9 +67,7 @@ export const procesarPeticion = (bot, userId, chatId, user, playa, dia) => {
 
 // PARA LOGAR ACCIONES
 export const logAccion = (user, userId, chatId, accion) => {
-  console.log(
-    `[${moment(Date.now()).format("LTS")}] \t ${user} => \t ${accion}`
-  );
+  console.log(`[${moment(Date.now()).format("LTS")}] \t ${user} => \t ${accion}`);
 };
 
 export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {
@@ -87,7 +85,7 @@ export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {
     });
 
     const data = await response.json();
-    console.log("DATA:", data);
+    //console.log("DATA:", data);
   } catch (error) {
     console.error(error);
   }
@@ -105,7 +103,7 @@ async function nivelDeViento(data) {
 
   for (let i = 0; i < 24; i++) {
     const hour = new Date(times[i]).getHours();
-    console.log(i, hour, wind[i]);
+    //console.log(i, hour, wind[i]);
     if (hour >= 8 && hour <= 20) {
       if (wind[i] > 18) {
         return 3; // máximo, salida directa
