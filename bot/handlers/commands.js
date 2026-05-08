@@ -1,6 +1,7 @@
 import { HELP, mostrarPlayas, estadoUsuarios, ADMIN_ID, ruta, esperandoSugerencia } from '../config.js';
 import fs from 'fs';
 import db from "../services/db.js";
+import { opcua } from "../services/opcua.js";
 
 export const handleCommands = async (bot, msg) => {
   //console.log("MSG:",msg);
@@ -103,6 +104,13 @@ export const handleCommands = async (bot, msg) => {
         }
       }
     );
+    return true;
+  }
+
+  if (texto === "/dique") {
+    const valor = await opcua();
+    console.log(valor);
+    bot.sendMessage(process.env.MY_CHAT_ID, valor);
     return true;
   }
   // 1. ACTIVAR MODO SUGERENCIA
