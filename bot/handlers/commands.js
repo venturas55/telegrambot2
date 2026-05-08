@@ -108,6 +108,7 @@ export const handleCommands = async (bot, msg) => {
   }
 
   if (texto === "/dique") {
+    console.log("Va /dique")
     const valor = await opcua();
     console.log(valor);
     bot.sendMessage(process.env.MY_CHAT_ID, valor);

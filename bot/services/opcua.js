@@ -19,7 +19,7 @@ export async function opcua() {
 
         await client.connect(endpointUrl);
         session = await client.createSession();
-
+        console.log("Sesion creada");
         // construimos lectura dinámica
         const nodesToRead = opcuaVariables.map(v => ({
             nodeId: v.nodeId,
