@@ -16,10 +16,13 @@ export async function opcua() {
     let session;
 
     try {
-
+        console.log("Conectando a OPC UA...");
         await client.connect(endpointUrl);
+        console.log("Conectado OK");
+
+        console.log("Creando sesión...");
         session = await client.createSession();
-        console.log("Sesion creada");
+        console.log("Sesion creada OK");
         // construimos lectura dinámica
         const nodesToRead = opcuaVariables.map(v => ({
             nodeId: v.nodeId,
