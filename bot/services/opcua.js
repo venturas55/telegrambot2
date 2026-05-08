@@ -6,7 +6,7 @@ import {
 import { opcuaVariables } from "./opcuaconfig.js";
 
 export async function opcua() {
-
+    console.log("En opcua.js");
     const endpointUrl = "opc.tcp://10.100.20.230:4840";
 
     const client = OPCUAClient.create({
