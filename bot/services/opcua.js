@@ -3,11 +3,11 @@ import {
     AttributeIds
 } from "node-opcua";
 
-import { opcuaVariables } from "./opcuaconfig.js";
+import { opcuaVariables,OPCUA_IP } from "./opcuaconfig.js";
 
 export async function opcua() {
     console.log("En opcua.js");
-    const endpointUrl = "opc.tcp://10.100.20.230:4840";
+    const endpointUrl = `opc.tcp://${OPCUA_IP}:4840`;
 
     const client = OPCUAClient.create({
         endpointMustExist: false

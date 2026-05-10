@@ -12,8 +12,15 @@ export const checkAccess = async (bot, msg, next) => {
     const user = await getUserByTelegramId(userId);
     //console.log(user);
     if (!user) {
-      await bot.sendMessage(chatId, `❌ ${first_name} no estas registrado`);
-      await bot.sendMessage(ADMIN_ID, ` ⚠️ El usuario ${first_name} ${last_name} con el id: ${userId} quiere tener acceso al Buscaviento_bot ⚠️`);
+      await bot.sendMessage(chatId, `❌ ${first_name} no estas registrado
+                        \n\n💎 Acceso Premium — 4.99€/mes
+                              Puedes pagar mediante bizum al número que ya debes conocer.
+
+                              IMPORTANTE:
+                              Indica tu usuario de Telegram (${chatId}) en el concepto del pago.
+
+                              Una vez recibido el pago, la activación suele tardar menos de 1 hora`);
+      await bot.sendMessage(ADMIN_ID, ` ⚠️ El usuario ${first_name} ${last_name} con el id: ${userId} quiere tener acceso al @Buscaviento_bot ⚠️`);
       altaUsuarioEnAdminPanel(chatId,first_name,first_name+" "+last_name);
       return;
     }

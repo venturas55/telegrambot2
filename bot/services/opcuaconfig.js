@@ -12,3 +12,5 @@ export const opcuaVariables = [
         nodeId: "ns=1;s=EM_VR041_VEL_VIENTO_38M_MEDIA"
     }
 ];
+
+export const OPCUA_IP = process.env.OPCUA_IP;
