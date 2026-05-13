@@ -5,9 +5,9 @@ import moment from 'moment';
 export const ruta = `${process.env.HOME}/.pm2/logs/telegramBot-out.log`;
 export const DIAS_VALIDOS = ["ayer", "hoy", "mañana"];
 export const PLAYAS_VALIDAS = [
-  "peñíscola", "castellon", "burriana", "canet",
+  "peñíscola", "castellón", "burriana", "canet",
   "port saplaya", "saler", "perelló", "mareny", "oliva",
-  "molins", "altea", "villajoyosa", "santa pola", "los narejos"
+  "molins", "altea", "villajoyosa", "santa pola", "narejos"
 ];
 export const HELP = `
 PONLA PONLA PONLA
@@ -40,7 +40,7 @@ export const mostrarPlayas = (bot, chatId) => {
 
 export const validar = (playa, dia) => {
   if (!PLAYAS_VALIDAS.includes(playa)) {
-    return `❌ La playa 🏖️ debe ser una de las siguientes:\n\tPeñíscola\n\tCastellon\n\tBurriana\n\tCanet\n\tPort saplaya\n\tSaler\n\tMareny\n\tOliva\n\tMolins\n\tAltea\n\tVillajoyosa\n\tSanta pola\n\tLos narejos`;
+    return `❌ La playa 🏖️ debe ser una de las siguientes:\n\tPeñíscola\n\tCastellón\n\tBurriana\n\tCanet\n\tPort saplaya\n\tSaler\n\tMareny\n\tOliva\n\tMolins\n\tAltea\n\tVillajoyosa\n\tSanta pola\n\tLos narejos`;
   }
   if (!DIAS_VALIDOS.includes(dia)) {
     return `❌ La segunda palabra debe ser el día deseado:\n\t${playa} ayer\n\t${playa} hoy\n\t${playa} mañana`;
