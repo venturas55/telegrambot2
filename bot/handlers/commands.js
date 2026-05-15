@@ -110,8 +110,9 @@ export const handleCommands = async (bot, msg) => {
   if (texto === "/dique") {
     const valor = await getOpcUaData();
     console.log(valor);
-    let mensaje= `${valor[0].velocidad_media_viento}  ${valor[1].velocidad_media_viento} ${valor[2].velocidad_media_viento}`
-    bot.sendMessage(process.env.MY_CHAT_ID, valor);
+    let mensaje= `${valor[0].velocidad_media_viento}  ${valor[1].velocidad_media_viento} ${valor[2].velocidad_media_viento}`;
+    console.log(valor);
+    bot.sendMessage(process.env.MY_CHAT_ID, mensaje);
     return true;
   }
   // 1. ACTIVAR MODO SUGERENCIA
