@@ -1,7 +1,7 @@
 import { HELP, mostrarPlayas, estadoUsuarios, ADMIN_ID, ruta, esperandoSugerencia } from '../config.js';
 import fs from 'fs';
 import db from "../services/db.js";
-import { opcua } from "../services/opcua.js";
+import { getOpcUaData } from "../services/getopcuaData.js";
 
 export const handleCommands = async (bot, msg) => {
   //console.log("MSG:",msg);
@@ -108,9 +108,9 @@ export const handleCommands = async (bot, msg) => {
   }
 
   if (texto === "/dique") {
-    console.log("Va /dique")
-    const valor = await opcua();
+    const valor = await getOpcUaData();
     console.log(valor);
+    let mensaje= `${valor[0].velocidad_media_viento}  ${valor[1].velocidad_media_viento} ${valor[2].velocidad_media_viento}`
     bot.sendMessage(process.env.MY_CHAT_ID, valor);
     return true;
   }
