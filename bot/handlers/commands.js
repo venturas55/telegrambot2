@@ -70,10 +70,25 @@ export const handleCommands = async (bot, msg) => {
 
   if (texto === "/dique") {
     const valor = await getOpcUaData();
-    console.log(valor);
-    let mensaje = `${valor[0].velocidad_media_viento}  ${valor[1].velocidad_media_viento} ${valor[2].velocidad_media_viento}`;
-    console.log(mensaje);
-    bot.sendMessage(chatId, mensaje);
+    let viento_valencia = (valor[0] * 3.6 / 1.852).toFixed(1);
+    let viento_sagunto = (valor[1] * 3.6 / 1.852).toFixed(1);
+    let viento_gandia = (valor[2] * 3.6 / 1.852).toFixed(1);
+
+    return bot.sendMessage(chatId, "📡 Selecciona una cámara disponible (modo experimental):", {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: `Valencia - ${viento_valencia} knots`, url: "http://guardiandelfaro.es/viento" }
+          ],
+          [
+            { text: `Sagunto - ${viento_sagunto} knots`, url: "http://guardiandelfaro.es/viento" }
+          ],
+          [
+            { text: `Gandia - ${viento_gandia} knots`, url: "http://guardiandelfaro.es/viento" }
+          ]
+        ]
+      }
+    });
     return true;
   }
 
