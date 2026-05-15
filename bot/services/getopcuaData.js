@@ -2,9 +2,9 @@ import db from "./db_opcua.js";
 
 export async function getOpcUaData() {
     console.log("En opcua.js");
- 
+
     try {
-         return await db.query(`SELECT m.*
+        var [datos] = await db.query(`SELECT m.*
                                                     FROM mediciones m
                                                     INNER JOIN (
                                                         SELECT id_estacion,
@@ -15,8 +15,10 @@ export async function getOpcUaData() {
                                                     ON m.id_estacion = ultimos.id_estacion
                                                     AND m.fecha_consulta = ultimos.ultima_fecha
                                                     ORDER BY m.id_estacion;`,);
+
+        return datos;
     } finally {
 
-      console.log("error");
+        console.log("error");
     }
 }
