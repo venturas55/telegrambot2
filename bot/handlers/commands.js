@@ -1,7 +1,7 @@
 import { HELP, mostrarPlayas, estadoUsuarios, ADMIN_ID, ruta, esperandoSugerencia } from '../config.js';
 import fs from 'fs';
 import db from "../services/db.js";
-import { getOpcUaData } from "../services/getopcuaData.js";
+import { getOpcUaData,degreesToDirection } from "../services/getopcuaData.js";
 
 export const handleCommands = async (bot, msg) => {
   //console.log("MSG:",msg);
@@ -70,21 +70,24 @@ export const handleCommands = async (bot, msg) => {
 
   if (texto === "/dique") {
     const valor = await getOpcUaData();
-    let viento_valencia = (valor[0] * 3.6 / 1.852).toFixed(1);
-    let viento_sagunto = (valor[1] * 3.6 / 1.852).toFixed(1);
-    let viento_gandia = (valor[2] * 3.6 / 1.852).toFixed(1);
+    let viento_valencia = (valor[0].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
+    let viento_sagunto = (valor[1].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
+    let viento_gandia = (valor[2].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
+    let dir_valencia= degreesToDirection(valor[0].direccion_viento);
+    let dir_sagunto= degreesToDirection(valor[1].direccion_viento);
+    let dir_gandia= degreesToDirection(valor[2].direccion_viento);
 
     return bot.sendMessage(chatId, "📡 Selecciona una cámara disponible (modo experimental):", {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: `Valencia - ${viento_valencia} knots`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Valencia - ${viento_valencia} knots ${dir_valencia})`, url: "http://guardiandelfaro.es/viento" }
           ],
           [
-            { text: `Sagunto - ${viento_sagunto} knots`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Sagunto - ${viento_sagunto} knots ${dir_sagunto})`, url: "http://guardiandelfaro.es/viento" }
           ],
           [
-            { text: `Gandia - ${viento_gandia} knots`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Gandia - ${viento_gandia} knots ${dir_gandia})`, url: "http://guardiandelfaro.es/viento" }
           ]
         ]
       }
