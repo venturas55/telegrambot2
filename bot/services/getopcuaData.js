@@ -17,7 +17,6 @@ export async function getOpcUaData() {
                                                     ORDER BY m.id_estacion;`,);
     } finally {
 
-        if (session) await session.close();
-        await client.disconnect();
+      console.log("error");
     }
 }
