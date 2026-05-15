@@ -77,17 +77,17 @@ export const handleCommands = async (bot, msg) => {
     let dir_sagunto= degreesToDirection(valor[1].direccion_viento);
     let dir_gandia= degreesToDirection(valor[2].direccion_viento);
 
-    return bot.sendMessage(chatId, "📡 Selecciona una cámara disponible (modo experimental):", {
+    return bot.sendMessage(chatId, "📡 Selecciona una estación", {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: `Valencia - ${viento_valencia} knots ${dir_valencia})`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Valencia - ${viento_valencia} knots ${dir_valencia}`, url: "http://guardiandelfaro.es/viento" }
           ],
           [
-            { text: `Sagunto - ${viento_sagunto} knots ${dir_sagunto})`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Sagunto - ${viento_sagunto} knots ${dir_sagunto}`, url: "http://guardiandelfaro.es/viento" }
           ],
           [
-            { text: `Gandia - ${viento_gandia} knots ${dir_gandia})`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Gandia - ${viento_gandia} knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento" }
           ]
         ]
       }
