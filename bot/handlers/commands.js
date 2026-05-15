@@ -68,12 +68,21 @@ export const handleCommands = async (bot, msg) => {
     return true;
   }
 
+  if (texto === "/dique") {
+    const valor = await getOpcUaData();
+    console.log(valor);
+    let mensaje = `${valor[0].velocidad_media_viento}  ${valor[1].velocidad_media_viento} ${valor[2].velocidad_media_viento}`;
+    console.log(mensaje);
+    bot.sendMessage(chatId, mensaje);
+    return true;
+  }
+
   if (texto === "/avisos") {
     let [configuracion] = await db.query(`SELECT * FROM  configuraciones where telegram_id=?`, [userId]);
-    configuracion=configuracion[0];
+    configuracion = configuracion[0];
     let texto;
     let botones;
-    let hora=(configuracion.hora_aviso).substr(0,5)
+    let hora = (configuracion.hora_aviso).substr(0, 5)
     if (configuracion.alarmas) {
       texto = `📝 Tienes la configuración de avisos activada a las ${hora}`;
       botones = [
@@ -84,11 +93,11 @@ export const handleCommands = async (bot, msg) => {
           { text: "⏰ Cambiar hora", callback_data: "avisos:cambiar_hora" }
         ]
       ]
-    }else{
+    } else {
       texto = `📝 Tienes la configuración de avisos desactivada`;
       botones = [
         [
-            { text: "✅ Activar", callback_data: "avisos:activar" },
+          { text: "✅ Activar", callback_data: "avisos:activar" },
         ],
         [
           { text: "⏰ Cambiar hora", callback_data: "avisos:cambiar_hora" }
@@ -107,14 +116,7 @@ export const handleCommands = async (bot, msg) => {
     return true;
   }
 
-  if (texto === "/dique") {
-    const valor = await getOpcUaData();
-    console.log(valor);
-    let mensaje= `${valor[0].velocidad_media_viento}  ${valor[1].velocidad_media_viento} ${valor[2].velocidad_media_viento}`;
-    console.log(mensaje);
-    bot.sendMessage(process.env.MY_CHAT_ID, mensaje);
-    return true;
-  }
+
   // 1. ACTIVAR MODO SUGERENCIA
   if (texto === "/sugerencia") {
     estadoUsuarios[userId] = {
