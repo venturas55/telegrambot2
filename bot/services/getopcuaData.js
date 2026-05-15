@@ -17,7 +17,7 @@ export async function getOpcUaData() {
                                                     ORDER BY m.id_estacion;`,);
 
         return datos;
-    } finally {
+    } catch {
 
         console.log("error");
     }

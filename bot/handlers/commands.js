@@ -111,7 +111,7 @@ export const handleCommands = async (bot, msg) => {
     const valor = await getOpcUaData();
     console.log(valor);
     let mensaje= `${valor[0].velocidad_media_viento}  ${valor[1].velocidad_media_viento} ${valor[2].velocidad_media_viento}`;
-    console.log(valor);
+    console.log(mensaje);
     bot.sendMessage(process.env.MY_CHAT_ID, mensaje);
     return true;
   }
