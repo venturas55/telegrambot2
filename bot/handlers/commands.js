@@ -68,7 +68,7 @@ export const handleCommands = async (bot, msg) => {
     return true;
   }
 
-  if (texto === "/dique") {
+  if (texto === "/estaciones") {
     const valor = await getOpcUaData();
     let viento_valencia = (valor[0].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
     let viento_sagunto = (valor[1].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
@@ -81,13 +81,13 @@ export const handleCommands = async (bot, msg) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: `Valencia - ${viento_valencia} knots ${dir_valencia}`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Valencia - ${viento_valencia}knots ${dir_valencia}`, url: "http://guardiandelfaro.es/viento" }
           ],
           [
-            { text: `Sagunto - ${viento_sagunto} knots ${dir_sagunto}`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Sagunto - ${viento_sagunto}knots ${dir_sagunto}`, url: "http://guardiandelfaro.es/viento" }
           ],
           [
-            { text: `Gandia - ${viento_gandia} knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento" }
           ]
         ]
       }
