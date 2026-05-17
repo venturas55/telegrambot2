@@ -81,13 +81,13 @@ export const handleCommands = async (bot, msg) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: `Valencia - ${viento_valencia}knots ${dir_valencia}`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Valencia - ${viento_valencia}knots ${dir_valencia}`, url: "http://guardiandelfaro.es/viento#1" }
           ],
           [
-            { text: `Sagunto - ${viento_sagunto}knots ${dir_sagunto}`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Sagunto - ${viento_sagunto}knots ${dir_sagunto}`, url: "http://guardiandelfaro.es/viento#2" }
           ],
           [
-            { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento" }
+            { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento#3" }
           ]
         ]
       }
