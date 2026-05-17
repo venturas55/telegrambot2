@@ -26,8 +26,8 @@ export async function getOpcUaData() {
 export function degreesToDirection(deg) {
 
       const directions = [
-        'N', 'NE', 'E', 'SE',
-        'S', 'SW', 'W', 'NW'
+        'N ↓', 'NE ↙', 'E ←', 'SE ↖',
+        'S ↑', 'SW ↗', 'W →', 'NW ↘'
       ];
 
       return directions[
