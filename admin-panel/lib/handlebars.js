@@ -62,4 +62,9 @@ helpers.timeago = (fecha) => {
   return format(timestamp, "es_ES");
 };
 
+// HELPERS SIMPLES PARA IF
+helpers.eq = (a, b) => a == b;
+helpers.gt = (a, b) => Number(a) > Number(b);
+helpers.lt = (a, b) => Number(a) < Number(b);
+
 export default helpers;
