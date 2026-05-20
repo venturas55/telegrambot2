@@ -7,7 +7,7 @@ import helpers from './lib/handlebars.js';
 import { simpleAuthMiddleware } from './lib/funciones.js';
 import * as path from "path";
 import * as url from "url";
-import { bot } from "./services/telegram.js"
+import { bot } from "./services/telegram.js";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 const app = express();
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("hbs", engine({
   extname: "hbs",
   defaultLayout: "main",
-  helpers: helpers //no hay nada aun
+  helpers: helpers
 }));
 app.set("view engine", "hbs");
 app.set("views", "./views");

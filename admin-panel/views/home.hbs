@@ -25,16 +25,15 @@
         <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           💳 Pago
         </button>
-        {{#when this.estado 'eq' 'activo'}}
+        {{#if (eq this.estado 'activo')}}
         <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           🚫 Revocar
         </button>
-        {{/when}}
-        {{#when this.estado 'noteq' 'activo'}}
+        {{else}}
         <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           ✅ Activar
         </button>
-        {{/when}}
+        {{/if}}
         <button class="btn-remove" data-sub="{{subscripcion_id}}" data-user="{{username}}" data-id="{{telegram_id}}">
           🗑️ ELIMINAR
         </button>
