@@ -29,11 +29,12 @@
         <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           🚫 Revocar
         </button>
-        {{else}}
+        {{/when}}
+        {{#when this.estado 'noteq' 'activo'}}
         <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           ✅ Activar
         </button>
-             {{/if}}
+        {{/when}}
         <button class="btn-remove" data-sub="{{subscripcion_id}}" data-user="{{username}}" data-id="{{telegram_id}}">
           🗑️ ELIMINAR
         </button>
