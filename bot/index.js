@@ -27,6 +27,54 @@ dayjs.locale('es');
 const bot = initTelegram(BOT_TOKEN);
 
 // ==============================================
+// 💬NODE CRON PARA RECORDAR VOLVER DE ALTA
+// ==============================================
+cron.schedule(
+  '30 10 1 3-9 *',
+  async () => {
+    try {
+      const [suscripciones] = await db.query(`
+        SELECT telegram_id, end_date
+        FROM subscripciones
+        WHERE end_date < NOW()
+        AND end_date > DATE_SUB(NOW(), INTERVAL 6 MONTH)
+      `);
+
+      const ahora = new Date();
+
+      // AVISOS DE EXPIRACIÓN DE LA SUSCRIPCIÓN
+      for (const user of suscripciones) {
+        const chatId = user.telegram_id;
+        const fin = new Date(user.end_date);
+
+        const diffMs = ahora - fin;
+
+        const haceDias = Math.floor(
+          diffMs / (1000 * 60 * 60 * 24)
+        );
+
+        const mensaje =
+        `⚠️ Tu suscripción expiró hace ${haceDias} días.
+        🌬️ ¿No nos echas de menos?
+        Vuelve a disfrutar del viento sin lugar a dudas.`;
+
+        try {
+          await bot.sendMessage(chatId, mensaje);
+        } catch (e) {
+          console.warn(`No se pudo enviar a ${chatId}`);
+        }
+      }
+
+    } catch (err) {
+      console.error('Error en cron:', err);
+    }
+  },
+  {
+    timezone: 'Europe/Madrid'
+  }
+);
+
+// ==============================================
 // 💬NODE CRON PARA NOTIFICAR VENCIMIENTO PROXIMO
 // ==============================================
 cron.schedule('0 8 * * *', async () => {

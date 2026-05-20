@@ -1,7 +1,7 @@
 import { HELP, mostrarPlayas, estadoUsuarios, ADMIN_ID, ruta, esperandoSugerencia } from '../config.js';
 import fs from 'fs';
 import db from "../services/db.js";
-import { getOpcUaData,degreesToDirection } from "../services/getopcuaData.js";
+import { getOpcUaData, degreesToDirection } from "../services/getopcuaData.js";
 
 export const handleCommands = async (bot, msg) => {
   //console.log("MSG:",msg);
@@ -73,18 +73,18 @@ export const handleCommands = async (bot, msg) => {
     let viento_valencia = (valor[0].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
     let viento_sagunto = (valor[1].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
     let viento_gandia = (valor[2].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
-    let dir_valencia= degreesToDirection(valor[0].direccion_viento);
-    let dir_sagunto= degreesToDirection(valor[1].direccion_viento);
-    let dir_gandia= degreesToDirection(valor[2].direccion_viento);
+    let dir_valencia = degreesToDirection(valor[0].direccion_viento);
+    let dir_sagunto = degreesToDirection(valor[1].direccion_viento);
+    let dir_gandia = degreesToDirection(valor[2].direccion_viento);
 
     return bot.sendMessage(chatId, "📡 Selecciona una estación", {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: `Valencia - ${viento_valencia}knots ${dir_valencia}`, url: "http://guardiandelfaro.es/viento#1" }
+            { text: `Sagunto - ${viento_sagunto}knots ${dir_sagunto}`, url: "http://guardiandelfaro.es/viento#2" }
           ],
           [
-            { text: `Sagunto - ${viento_sagunto}knots ${dir_sagunto}`, url: "http://guardiandelfaro.es/viento#2" }
+            { text: `Valencia - ${viento_valencia}knots ${dir_valencia}`, url: "http://guardiandelfaro.es/viento#1" }
           ],
           [
             { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento#3" }

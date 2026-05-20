@@ -25,7 +25,7 @@
         <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           💳 Pago
         </button>
-        {{#if has_access}}
+        {{#when this.estado 'eq' 'activo'}}
         <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           🚫 Revocar
         </button>
@@ -33,10 +33,11 @@
         <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           ✅ Activar
         </button>
+             {{/if}}
         <button class="btn-remove" data-sub="{{subscripcion_id}}" data-user="{{username}}" data-id="{{telegram_id}}">
           🗑️ ELIMINAR
         </button>
-        {{/if}}
+   
 
       </td>
     </tr>
@@ -45,9 +46,12 @@
 </table>
 <div class="card">
   <h2>📢 Enviar broadcast</h2>
+  <button class="btn-revoke" id="btn_incidencia">
+    Incidencia
+  </button>
 
   <form method="POST" action="/broadcast">
-    <textarea name="message" placeholder="Escribe el mensaje para todos los usuarios..." required>
+    <textarea id="mensaje_txt_area" name="message" placeholder="Escribe el mensaje para todos los usuarios..." required>
     </textarea>
 
     <button type="submit" class="btn-broadcast">
@@ -144,4 +148,13 @@
     });
   });
   //FIN DE EDICION FECHA EXPIRACION
+
+
+  const hoy = new Date().toLocaleDateString("es-ES");
+
+  document.getElementById("btn_incidencia")?.addEventListener("click", () => {
+    document.getElementById("mensaje_text_area").value =
+      `Durante toda la mañana de hoy, ${hoy}, el buscaviento no respondía correctamente las peticiones.
+La incidencia ya ha sido resuelta. Disculpen las molestias ocasionadas.`;
+  });
 </script>
