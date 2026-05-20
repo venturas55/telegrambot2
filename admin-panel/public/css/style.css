@@ -100,13 +100,13 @@ button {
   box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
 }
 
-.btn-broadcast {
+.btn-incidencia {
   background: transparent;
   color: #44ef7d;
   border: 2px solid #44ef7d;
 }
 
-.btn-broadcast:hover {
+.btn-incidencia:hover {
   background: #44ef7d;
   color: white;
 }
