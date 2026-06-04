@@ -5,16 +5,18 @@
 <table>
   <thead>
     <tr>
+      <th>Usuario</th>
+      <th>Telegram Id</th>
       <th>Precio</th>
       <th>Fecha de Pago</th>
       <th>Acciones</th>
     </tr>
   </thead>
-  <h2>Todos los pagos de {{usuario.username}} {{usuario.nombre}} con id {{usuario.telegram_id}} </h2>
-  <h4>Dado de alta el {{formatearSp usuario.fecha_alta}}</h4>
   <tbody>
     {{#each pagos}}
     <tr>
+      <td>{{username}}</td>
+      <td>{{telegram_id}}</td>
       <td class="precio">{{precio}}</td>
       <td class="fecha" data-raw="{{fechaInputDateTime fecha_pago}}"> {{formatearSp fecha_pago false}} </td>
       <td>

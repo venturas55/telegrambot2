@@ -68,6 +68,13 @@ app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
   res.render("pagos", { pagos, usuario });
 });
 
+//RUTA PARA VER LOS PAGOS DE UN USUARIO
+app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
+  const [pagos] = await db.query(`
+    SELECT * FROM pagos p LEFT JOIN usuarios u ON p.telegram_id=u.telegram_id`, );
+  res.render("pagos_list", { pagos });
+});
+
 //BORRAR UN PAGO
 app.post("/delPayment", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
