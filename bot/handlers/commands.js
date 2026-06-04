@@ -58,6 +58,17 @@ export const handleCommands = async (bot, msg) => {
 
     const suscripcion = rows[0];
 
+    const fecha = suscripcion.end_date.toLocaleDateString("es-ES", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+
+    const hora = suscripcion.end_date.toLocaleTimeString("es-ES", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
     if (!suscripcion) {
       await bot.sendMessage(
         chatId,
@@ -68,7 +79,7 @@ export const handleCommands = async (bot, msg) => {
 
     await bot.sendMessage(
       chatId,
-      `Tu suscripción expira el ${suscripcion.end_date}.\n\n${user}, si deseas seguir disfrutando del servicio, puedes renovarla por 4,99 €.`
+      `Tu suscripción estará activa hasta el ${fecha} a las ${hora}.\n\n${user}, si deseas seguir disfrutando del servicio, puedes renovarla por 4,99 €.`
     );
 
     return true;
