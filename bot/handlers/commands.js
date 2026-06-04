@@ -4,7 +4,7 @@ import db from "../services/db.js";
 import { getOpcUaData, degreesToDirection } from "../services/getopcuaData.js";
 
 export const handleCommands = async (bot, msg) => {
-  console.log("MSG:", msg);
+  //console.log("MSG:", msg);
   const chatId = msg.chat.id;
   const userId = msg.from.id;
   const user = [msg.from.first_name, msg.from.last_name]
