@@ -71,7 +71,7 @@ app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
 //RUTA PARA VER LOS PAGOS DE UN USUARIO
 app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
   const [pagos] = await db.query(`
-    SELECT * FROM pagos p LEFT JOIN usuarios u ON p.telegram_id=u.telegram_id`, );
+    SELECT * FROM pagos p LEFT JOIN usuarios u ON p.telegram_id=u.telegram_id`,);
   res.render("pagos_list", { pagos });
 });
 
@@ -219,7 +219,15 @@ app.get('/login', (req, res) => {
 // Enviar broadcast
 app.post('/broadcast', async (req, res) => {
   const message = req.body.message;
-  const [users] = await db.query(`SELECT telegram_id FROM usuarios`);
+  const [users] = await db.query(`
+    FROM usuarios u
+    INNER JOIN subscripciones s
+      ON u.telegram_id = s.telegram_id
+    WHERE s.estado = 'activo'
+      AND s.end_date > NOW()
+  `);
+
+
   for (const user of users) {
     const chatId = user.telegram_id;
     try {
