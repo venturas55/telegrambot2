@@ -70,30 +70,37 @@ app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
 
 //RUTA PARA VER LOS PAGOS DE UN USUARIO
 app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
-  const [pagos] = await db.query(`
-    SELECT * FROM pagos p LEFT JOIN usuarios u ON p.telegram_id=u.telegram_id`,);
-  const [[stats]] = await db.query(`
-  SELECT
-    COUNT(*) AS num_pagos,
-    SUM(precio) AS total_pagos,
-    MIN(fecha_pago) AS primera_fecha,
-    MAX(fecha_pago) AS ultima_fecha,
-    TIMESTAMPDIFF(MONTH, MIN(fecha_pago), MAX(fecha_pago)) AS meses,
-  FROM pagos
-`);
+  try {
+    const [pagos] = await db.query(`
+      SELECT *
+      FROM pagos p
+      LEFT JOIN usuarios u ON p.telegram_id = u.telegram_id
+    `);
 
-  const totalPagos = pagos.reduce(
-    (sum, pago) => sum + Number(pago.precio),
-    0
-  );
-  res.render("pagos_list", {
-    pagos, totalPagos: stats.total_pagos,
-    meses: stats.meses,
-    primeraFecha: stats.primera_fecha,
-    ultimaFecha: stats.ultima_fecha,
-    numPagos: stats.num_pagos,
-    gastos: (stats.meses*(12+7+2))
-  });
+    const [[stats]] = await db.query(`
+      SELECT
+        COUNT(*) AS num_pagos,
+        SUM(precio) AS total_pagos,
+        MIN(fecha_pago) AS primera_fecha,
+        MAX(fecha_pago) AS ultima_fecha,
+        TIMESTAMPDIFF(MONTH, MIN(fecha_pago), MAX(fecha_pago)) AS meses
+      FROM pagos
+    `);
+
+    res.render("pagos_list", {
+      pagos,
+      totalPagos: stats.total_pagos || 0,
+      meses: stats.meses || 0,
+      primeraFecha: stats.primera_fecha,
+      ultimaFecha: stats.ultima_fecha,
+      numPagos: stats.num_pagos || 0,
+      gastos: (stats.meses || 0) * 25
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al obtener los pagos");
+  }
 });
 
 //BORRAR UN PAGO
