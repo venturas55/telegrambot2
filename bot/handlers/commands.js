@@ -29,8 +29,11 @@ export const handleCommands = async (bot, msg) => {
     return bot.sendMessage(chatId, "📡 Selecciona una cámara disponible (modo experimental):", {
       reply_markup: {
         inline_keyboard: [
+                 [
+            { text: "🏝️ Canet", url: "http://guardiandelfaro.es/cam/canet.html" }
+          ],
           [
-            { text: "🏝️ Pobla de Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
+            { text: "🪨 Pobla de Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
           ],
           [
             { text: "🌊 Patacona", url: "http://guardiandelfaro.es/cam/alboraya.html" }
