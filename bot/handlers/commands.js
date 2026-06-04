@@ -39,7 +39,14 @@ export const handleCommands = async (bot, msg) => {
             { text: "🏄‍♂️ Arenas", url: "http://guardiandelfaro.es/cam/arenas.html" }
           ],
           [
+            { text: "🫒 Oliva", url: "https://www.comunitatvalenciana.com/es/valencia/oliva/webcams/oliva-puerto" }
+          ]
+          ,
+          [
             { text: "🌅 Altea", url: "http://guardiandelfaro.es/cam/altea.html" }
+          ],
+          [
+            { text: "🪢 Santa Pola", url: "https://www.comunitatvalenciana.com/es/alacant-alicante/santa-pola/webcams/santa-pola-gran-playa" }
           ]
         ]
       }
