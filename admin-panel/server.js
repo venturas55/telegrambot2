@@ -72,7 +72,12 @@ app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
 app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
   const [pagos] = await db.query(`
     SELECT * FROM pagos p LEFT JOIN usuarios u ON p.telegram_id=u.telegram_id`,);
-  res.render("pagos_list", { pagos });
+
+    const totalPagos = pagos.reduce(
+  (sum, pago) => sum + Number(pago.precio),
+  0
+);
+  res.render("pagos_list", { pagos, totalPagos });
 });
 
 //BORRAR UN PAGO

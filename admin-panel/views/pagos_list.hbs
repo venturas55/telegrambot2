@@ -7,7 +7,7 @@
     <tr>
       <th>Usuario</th>
       <th>Telegram Id</th>
-      <th>Precio</th>
+      <th>Importe</th>
       <th>Fecha de Pago</th>
       <th>Acciones</th>
     </tr>
@@ -26,6 +26,13 @@
     </tr>
     {{/each}}
   </tbody>
+  <tfoot>
+  <tr>
+    <td colspan="2"><strong>TOTAL</strong></td>
+    <td><strong>{{totalPagos}} €</strong></td>
+    <td colspan="2"></td>
+  </tr>
+</tfoot>
 </table>
 <form action="/logout" method="POST">
   <button type="submit" class="btn-revoke">Log out</button>
