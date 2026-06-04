@@ -78,7 +78,7 @@ app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
     SUM(precio) AS total_pagos,
     MIN(fecha_pago) AS primera_fecha,
     MAX(fecha_pago) AS ultima_fecha,
-    TIMESTAMPDIFF(MONTH, MIN(fecha_pago), MAX(fecha_pago)) AS meses
+    TIMESTAMPDIFF(MONTH, MIN(fecha_pago), MAX(fecha_pago)) AS meses,
   FROM pagos
 `);
 
@@ -92,7 +92,7 @@ app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
     primeraFecha: stats.primera_fecha,
     ultimaFecha: stats.ultima_fecha,
     numPagos: stats.num_pagos,
-    gastos: (stats.num_pagos*(12+7+2))
+    gastos: (stats.meses*(12+7+2))
   });
 });
 
