@@ -83,8 +83,12 @@ app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
         SUM(precio) AS total_pagos,
         MIN(fecha_pago) AS primera_fecha,
         MAX(fecha_pago) AS ultima_fecha,
-        TIMESTAMPDIFF(MONTH, MIN(fecha_pago), MAX(fecha_pago)) AS meses
-      FROM pagos
+        TIMESTAMPDIFF(
+          MONTH,
+          DATE_FORMAT(MIN(fecha_pago), '%Y-%m-01'),
+          DATE_FORMAT(MAX(fecha_pago), '%Y-%m-01')
+        ) + 1 AS meses
+      FROM pagos;
     `);
 
     res.render("pagos_list", {

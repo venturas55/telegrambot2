@@ -53,39 +53,35 @@
 </div>
 
 <script>
-  document.querySelectorAll(".btn-edit").forEach(btn => {
-    btn.addEventListener("click", function () {
-      const tr = this.closest("tr");
+document.querySelectorAll(".btn-edit").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const tr = this.closest("tr");
 
-      const tdPrecio = tr.querySelector(".precio");
-      const tdFecha = tr.querySelector(".fecha");
-      const acciones = this.parentElement;
+    const tdPrecio = tr.querySelector(".precio");
+    const tdFecha = tr.querySelector(".fecha");
+    const acciones = this.parentElement;
 
-      const precioActual = tdPrecio.innerText;
-      const fechaActual = tdFecha.dataset.raw; // formato YYYY-MM-DD
+    const id = this.dataset.id;
 
-      // Convertir a inputs
-      tdPrecio.innerHTML = `<input type="number" value="${precioActual}" style="width:80px">`;
-      tdFecha.innerHTML = `<input type="datetime-local" value="${fechaActual}">`;
+    const precioActual = tdPrecio.textContent.trim();
+    const fechaActual = tdFecha.dataset.raw;
 
-      // Cambiar botones
-      acciones.innerHTML = `
+    tdPrecio.innerHTML = `<input type="number" value="${precioActual}" style="width:80px">`;
+    tdFecha.innerHTML = `<input type="datetime-local" value="${fechaActual}">`;
+
+    acciones.innerHTML = `
       <button class="btn-save">💾 Guardar</button>
       <button class="btn-cancel">❌ Cancelar</button>
     `;
 
-      // SAVE
-      acciones.querySelector(".btn-save").addEventListener("click", async () => {
-        const nuevoPrecio = tdPrecio.querySelector("input").value;
-        const nuevaFecha = tdFecha.querySelector("input").value;
+    acciones.querySelector(".btn-save").addEventListener("click", async () => {
+      const nuevoPrecio = tdPrecio.querySelector("input").value;
+      const nuevaFecha = tdFecha.querySelector("input").value;
 
-        const id = btn.dataset.id;
-
-        await fetch("/editPayment", {
+      try {
+        const res = await fetch("/editPayment", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             id,
             precio: nuevoPrecio,
@@ -93,14 +89,26 @@
           })
         });
 
-        location.reload(); // simple y efectivo
-      });
+        if (!res.ok) throw new Error("Error al guardar");
 
-      // CANCEL
-      acciones.querySelector(".btn-cancel").addEventListener("click", () => {
-        location.reload();
-      });
+        // actualizar fila sin reload
+        tdPrecio.textContent = nuevoPrecio;
+        tdFecha.textContent = nuevaFecha;
 
+        acciones.innerHTML = `
+          <button class="btn-edit" data-id="${id}"> ✏️ EDITAR </button>
+          <button class="btn-del-payment" data-id="${id}"> 🗑️ ELIMINAR </button>
+        `;
+
+      } catch (err) {
+        alert("Error al guardar el pago");
+        console.error(err);
+      }
+    });
+
+    acciones.querySelector(".btn-cancel").addEventListener("click", () => {
+      location.reload(); // se puede mejorar más, pero ok temporal
     });
   });
+});
 </script>
