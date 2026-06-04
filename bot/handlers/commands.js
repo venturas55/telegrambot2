@@ -4,7 +4,7 @@ import db from "../services/db.js";
 import { getOpcUaData, degreesToDirection } from "../services/getopcuaData.js";
 
 export const handleCommands = async (bot, msg) => {
-  //console.log("MSG:",msg);
+  console.log("MSG:", msg);
   const chatId = msg.chat.id;
   const userId = msg.from.id;
   const user = [msg.from.first_name, msg.from.last_name]
@@ -30,10 +30,13 @@ export const handleCommands = async (bot, msg) => {
       reply_markup: {
         inline_keyboard: [
           [
+            { text: "🏝️ Pobla de Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
+          ],
+          [
             { text: "🌊 Patacona", url: "http://guardiandelfaro.es/cam/alboraya.html" }
           ],
           [
-            { text: "🏝️ Pobla de Farnals", url: "http://guardiandelfaro.es/cam/pobla.html" }
+            { text: "🏄‍♂️ Arenas", url: "http://guardiandelfaro.es/cam/arenas.html" }
           ],
           [
             { text: "🌅 Altea", url: "http://guardiandelfaro.es/cam/altea.html" }
@@ -47,9 +50,27 @@ export const handleCommands = async (bot, msg) => {
     bot.sendMessage(chatId, HELP);
     return true;
   }
+  if (texto === "/suscripcion") {
+    const [rows] = await db.query(
+      `SELECT * FROM subscripciones WHERE telegram_id = ?`,
+      [userId]
+    );
 
-  if (texto === "/precio") {
-    bot.sendMessage(chatId, `${user} recuerda pagar los 4,99€ al mes.`);
+    const suscripcion = rows[0];
+
+    if (!suscripcion) {
+      await bot.sendMessage(
+        chatId,
+        "No tienes ninguna suscripción activa. Contacta con el administrador"
+      );
+      return true;
+    }
+
+    await bot.sendMessage(
+      chatId,
+      `Tu suscripción expira el ${suscripcion.end_date}.\n\n${user}, si deseas seguir disfrutando del servicio, puedes renovarla por 4,99 €.`
+    );
+
     return true;
   }
 

@@ -18,7 +18,10 @@ Puedes escribir:
 🤖 Comandos disponibles:
 /playa → Elegir spot
 /general → Estado global de playas
+/estaciones → Estaciones propias con actualización cada minuto.
+/cam → Visualización de camaras. 
 /avisos → Consultar avisos
+/suscripcion → Consultar tu suscripción
 /sugerencia → Enviar notificaciones
 /help → Muestra esta ayuda
 
