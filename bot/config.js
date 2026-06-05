@@ -1,3 +1,4 @@
+import db from "./services/db.js";
 export const MY_CHAT_ID = Number(process.env.MY_CHAT_ID);
 export const ADMIN_ID = Number(process.env.ADMIN_ID);
 export const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -71,6 +72,18 @@ export const procesarPeticion = (bot, userId, chatId, user, playa, dia) => {
 // PARA LOGAR ACCIONES
 export const logAccion = (user, userId, chatId, accion) => {
   console.log(`[${moment(Date.now()).format("LTS")}] \t ${user} => \t ${accion}`);
+  try {
+    // Guardar en la DB
+    await db.query(
+      `INSERT INTO peticiones (telegram_id, peticion)
+     VALUES (?, ?)
+     `,
+      [userId, accion]
+    );
+  }
+  catch {
+    console.log("Error guardando peticion en bbdd");
+  }
 };
 
 export async function altaUsuarioEnAdminPanel(telegram_id, usuario, nombre) {

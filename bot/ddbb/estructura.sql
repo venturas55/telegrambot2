@@ -77,6 +77,14 @@ CREATE TABLE pagos (
   FOREIGN KEY (subscripcion_id) REFERENCES subscripciones(id)
 );
 
+CREATE TABLE peticiones (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  telegram_id BIGINT UNSIGNED NOT NULL,
+  peticion VARCHAR(200) NOT NULL,
+  fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (telegram_id) REFERENCES usuarios(telegram_id)
+);
+
 INSERT INTO
   usuarios (telegram_id, username, nombre)
 VALUES
