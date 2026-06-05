@@ -31,16 +31,17 @@
 <table>
   <thead>
     <tr>
-      <th>Fecha</th>
       <th>Peticion</th>
+      <th>Fecha</th>
+
     </tr>
   </thead>
 
   <tbody>
     {{#each peticiones}}
     <tr>
-      <td class="fecha"> {{fechaInputDateTime fecha }} </td>
       <td class="peticion">{{peticion}}</td>
+      <td class="fecha"> {{fechaInputDateTime fecha }} </td>
     </tr>
     {{/each}}
   </tbody>
