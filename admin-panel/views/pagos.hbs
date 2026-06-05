@@ -1,7 +1,7 @@
 <button class="btn-active" onclick="history.back()">VOLVER</button>
 
-<h1>👤 Usuarios</h1>
-
+<h2>Todos los pagos de {{usuario.username}} {{usuario.nombre}} con id {{usuario.telegram_id}} </h2>
+<h4>Dado de alta el {{formatearSp usuario.fecha_alta}}</h4>
 <table>
   <thead>
     <tr>
@@ -10,8 +10,7 @@
       <th>Acciones</th>
     </tr>
   </thead>
-  <h2>Todos los pagos de {{usuario.username}} {{usuario.nombre}} con id {{usuario.telegram_id}} </h2>
-  <h4>Dado de alta el {{formatearSp usuario.fecha_alta}}</h4>
+
   <tbody>
     {{#each pagos}}
     <tr>
@@ -21,6 +20,24 @@
         <button class="btn-edit" data-id="{{id}}"> ✏️ EDITAR </button>
         <button class="btn-del-payment" data-id="{{id}}"> 🗑️ ELIMINAR </button>
       </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<hr>
+<table>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Peticion</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each peticiones}}
+    <tr>
+      <td class="fecha"> {{formatearSp fecha }} </td>
+      <td class="peticion">{{peticion}}</td>
     </tr>
     {{/each}}
   </tbody>

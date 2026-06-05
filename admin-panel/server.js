@@ -62,10 +62,12 @@ app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id } = req.params;
   const [pagos] = await db.query(`
     SELECT * FROM pagos where telegram_id=?`, [telegram_id]);
+      const [peticiones] = await db.query(`
+    SELECT * FROM peticiones where telegram_id=?`, [telegram_id]);
   const [[usuario]] = await db.query(`
     SELECT * FROM usuarios where telegram_id=?`, [telegram_id]);
 
-  res.render("pagos", { pagos, usuario });
+  res.render("pagos", { pagos, peticiones,usuario });
 });
 
 //RUTA PARA VER LOS PAGOS DE UN USUARIO
