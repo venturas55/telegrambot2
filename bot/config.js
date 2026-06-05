@@ -70,7 +70,7 @@ export const procesarPeticion = (bot, userId, chatId, user, playa, dia) => {
 };
 
 // PARA LOGAR ACCIONES
-export const logAccion = (user, userId, chatId, accion) => {
+export const logAccion = async (user, userId, chatId, accion) => {
   console.log(`[${moment(Date.now()).format("LTS")}] \t ${user} => \t ${accion}`);
   try {
     // Guardar en la DB
