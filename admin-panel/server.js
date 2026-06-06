@@ -62,12 +62,12 @@ app.get("/pagos/:telegram_id", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id } = req.params;
   const [pagos] = await db.query(`
     SELECT * FROM pagos where telegram_id=?`, [telegram_id]);
-      const [peticiones] = await db.query(`
+  const [peticiones] = await db.query(`
     SELECT * FROM peticiones where telegram_id=?`, [telegram_id]);
   const [[usuario]] = await db.query(`
     SELECT * FROM usuarios where telegram_id=?`, [telegram_id]);
 
-  res.render("pagos", { pagos, peticiones,usuario });
+  res.render("pagos", { pagos, peticiones, usuario });
 });
 
 //RUTA PARA VER LOS PAGOS DE UN USUARIO
@@ -93,6 +93,8 @@ app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
       FROM pagos;
     `);
 
+    const [peticiones] = await db.query(`
+    SELECT * FROM peticiones p left join usuarios u on p.telegram_id=u.telegram_id order by p.fecha desc`, []);
     res.render("pagos_list", {
       pagos,
       totalPagos: stats.total_pagos || 0,
@@ -100,7 +102,8 @@ app.get("/pagos", simpleAuthMiddleware, async (req, res) => {
       primeraFecha: stats.primera_fecha,
       ultimaFecha: stats.ultima_fecha,
       numPagos: stats.num_pagos || 0,
-      gastos: (stats.meses || 0) * 25
+      gastos: (stats.meses || 0) * 25,
+      peticiones
     });
 
   } catch (error) {

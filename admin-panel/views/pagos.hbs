@@ -19,8 +19,8 @@
       <td class="precio">{{precio}}</td>
       <td class="fecha" data-raw="{{fechaInputDateTime fecha_pago}}"> {{formatearSp fecha_pago false}} </td>
       <td>
-        <button class="btn-edit" data-id="{{id}}"> ✏️ EDITAR </button>
-        <button class="btn-del-payment" data-id="{{id}}"> 🗑️ ELIMINAR </button>
+        <button class="btn-edit btn-green" data-id="{{id}}"> ✏️ EDITAR </button>
+        <button class="btn-del-payment btn-red" data-id="{{id}}"> 🗑️ ELIMINAR </button>
       </td>
     </tr>
     {{/each}}

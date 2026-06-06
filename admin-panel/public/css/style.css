@@ -81,53 +81,46 @@ button {
   font-weight: 600;
 }
 
-/* BOTÓN PAGAR */
-.btn-pay {
+.btn-blue {
   background: #2563eb;
   color: white;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
 }
 
-.btn-pay:hover {
+.btn-blue:hover {
   background: #1d4ed8;
   transform: translateY(-1px);
 }
 
-/* REVOCAR */
-.btn-blue{
-  background: #2563eb;
-  color: white;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
-}
-.btn-revoke {
+.btn-red {
   background: #ef4444;
   color: white;
   box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
 }
 
-.btn-incidencia {
+.btn-red:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.btn-green-transparent {
   background: transparent;
   color: #44ef7d;
   border: 2px solid #44ef7d;
 }
 
-.btn-incidencia:hover {
+/* .btn-green:hover {
   background: #44ef7d;
   color: white;
-}
-.btn-revoke:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
-}
+} */
 
-/* ACTIVAR */
-.btn-activate {
+.btn-green {
   background: #10b981;
   color: white;
   box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
 }
 
-.btn-activate:hover {
+.btn-green:hover {
   background: #059669;
   transform: translateY(-1px);
 }

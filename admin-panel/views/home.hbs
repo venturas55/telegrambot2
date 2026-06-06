@@ -22,15 +22,15 @@
         {{timeago end_date}} ({{formatearSp end_date }})
       </td>
       <td class="actions">
-        <button class="btn-pay" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+        <button class="btn-pay btn-blue" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           💳 Pago
         </button>
         {{#if (eq this.estado 'activo')}}
-        <button class="btn-revoke" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+        <button class="btn-revoke btn-red" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           🚫 Revocar
         </button>
         {{else}}
-        <button class="btn-activate" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+        <button class="btn-activate btn-green" data-sub="{{subscripcion_id}}" data-user="{{username}}">
           ✅ Activar
         </button>
         {{/if}}
@@ -47,8 +47,8 @@
 <div class="card">
 
   <a href="/pagos">
-  <button class="btn-activate">
-    Pagos
+  <button class="btn-green-transparent">
+    Informacion
   </button>
 </a>
 </div>
