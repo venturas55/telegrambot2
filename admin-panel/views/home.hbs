@@ -1,5 +1,11 @@
 <h1>👤 Usuarios</h1>
-
+<div class="card">
+  <a href="/pagos">
+    <button class="btn-green-transparent">
+      Informacion
+    </button>
+  </a>
+</div>
 <table>
   <thead>
     <tr>
@@ -22,7 +28,8 @@
         {{timeago end_date}} ({{formatearSp end_date }})
       </td>
       <td class="actions">
-        <button class="btn-pay btn-blue" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}" data-user="{{username}}">
+        <button class="btn-pay btn-blue" data-id="{{telegram_id}}" data-sub="{{subscripcion_id}}"
+          data-user="{{username}}">
           💳 Pago
         </button>
         {{#if (eq this.estado 'activo')}}
@@ -44,14 +51,7 @@
     {{/each}}
   </tbody>
 </table>
-<div class="card">
 
-  <a href="/pagos">
-  <button class="btn-green-transparent">
-    Informacion
-  </button>
-</a>
-</div>
 
 
 <div class="card">
