@@ -29,7 +29,7 @@ export const handleCommands = async (bot, msg) => {
     return bot.sendMessage(chatId, "📡 Selecciona una cámara disponible (modo experimental):", {
       reply_markup: {
         inline_keyboard: [
-                 [
+          [
             { text: "🏝️ Canet", url: "http://guardiandelfaro.es/cam/canet.html" }
           ],
           [
@@ -112,17 +112,28 @@ export const handleCommands = async (bot, msg) => {
 
   if (texto === "/estaciones") {
     const valor = await getOpcUaData();
-
-    const fecha = new Date(valor[0].fecha_consulta);
+    let viento_valencia = "No Disponible ";
+    let dir_valencia = "10min";
+    let viento_sagunto = "No Disponible ";
+    let dir_sagunto = "10min";
+    let viento_gandia = "No Disponible ";
+    let dir_gandia = "10min";
+    const fecha0 = new Date(valor[0].fecha_consulta);
+    const fecha1 = new Date(valor[1].fecha_consulta);
+    const fecha2 = new Date(valor[2].fecha_consulta);
     const ahora = new Date();
-    const diferencia_segundos = (ahora - fecha)/1000;
-    console.log(valor[0].fecha_consulta + "  ==> "+diferencia_segundos);
-    let viento_valencia = (valor[0].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
-    let viento_sagunto = (valor[1].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
-    let viento_gandia = (valor[2].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
-    let dir_valencia = degreesToDirection(valor[0].direccion_viento);
-    let dir_sagunto = degreesToDirection(valor[1].direccion_viento);
-    let dir_gandia = degreesToDirection(valor[2].direccion_viento);
+    if ((ahora - fecha0) / 1000 < 600) {
+      viento_valencia = (valor[0].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
+      dir_valencia = degreesToDirection(valor[0].direccion_viento);
+    }
+    if ((ahora - fecha1) / 1000 < 600) {
+      viento_sagunto = (valor[1].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
+      dir_sagunto = degreesToDirection(valor[1].direccion_viento);
+    }
+    if ((ahora - fecha2) / 1000 < 600) {
+      viento_gandia = (valor[2].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
+      dir_gandia = degreesToDirection(valor[2].direccion_viento);
+    }
 
     return bot.sendMessage(chatId, "📡 Selecciona una estación", {
       reply_markup: {
@@ -136,7 +147,7 @@ export const handleCommands = async (bot, msg) => {
           [
             { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento#3" }
           ]
-          
+
         ]
       }
     });
