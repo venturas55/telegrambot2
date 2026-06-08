@@ -23,12 +23,17 @@ export async function getOpcUaData() {
 
 export function degreesToDirection(deg) {
 
-      const directions = [
+    const directions = [
         'N ↓', 'NE ↙', 'E ←', 'SE ↖',
         'S ↑', 'SW ↗', 'W →', 'NW ↘'
-      ];
+    ];
 
-      return directions[
-        Math.round(deg / 45) % 8
-      ];
-    }
+    /*  return directions[
+       Math.round(deg / 45) % 8
+     ]; */
+    const normalized = (deg + 360) % 360;
+
+    const index = Math.floor((normalized + 22.5) / 45) % 8;
+
+    return directions[index];
+}
