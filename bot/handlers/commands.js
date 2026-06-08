@@ -112,6 +112,11 @@ export const handleCommands = async (bot, msg) => {
 
   if (texto === "/estaciones") {
     const valor = await getOpcUaData();
+
+    const fecha = new Date(valor[0].fechaConsulta);
+    const ahora = new Date();
+    const diferencia_segundos = (ahora - fecha)/1000;
+    console.log(valor[0].fecha_consulta + "  ==> "+diferencia_segundos);
     let viento_valencia = (valor[0].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
     let viento_sagunto = (valor[1].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
     let viento_gandia = (valor[2].velocidad_media_viento * 3.6 / 1.852).toFixed(1);
@@ -131,6 +136,7 @@ export const handleCommands = async (bot, msg) => {
           [
             { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento#3" }
           ]
+          ,[{text:`${valor[0].fecha_consulta} + " ==> "+${diferencia_segundos}`}]
         ]
       }
     });
