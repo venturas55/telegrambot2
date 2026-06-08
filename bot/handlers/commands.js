@@ -113,7 +113,7 @@ export const handleCommands = async (bot, msg) => {
   if (texto === "/estaciones") {
     const valor = await getOpcUaData();
 
-    const fecha = new Date(valor[0].fechaConsulta);
+    const fecha = new Date(valor[0].fecha_consulta);
     const ahora = new Date();
     const diferencia_segundos = (ahora - fecha)/1000;
     console.log(valor[0].fecha_consulta + "  ==> "+diferencia_segundos);
