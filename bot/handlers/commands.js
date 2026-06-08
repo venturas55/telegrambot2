@@ -147,7 +147,6 @@ export const handleCommands = async (bot, msg) => {
           [
             { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento#3" }
           ]
-
         ]
       }
     });

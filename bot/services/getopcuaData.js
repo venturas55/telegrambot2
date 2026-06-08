@@ -1,8 +1,6 @@
 import db from "./db_opcua.js";
 
 export async function getOpcUaData() {
-    console.log("En opcua.js");
-
     try {
         var [datos] = await db.query(`SELECT m.*
                                                     FROM mediciones m
