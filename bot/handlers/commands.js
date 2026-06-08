@@ -136,7 +136,7 @@ export const handleCommands = async (bot, msg) => {
           [
             { text: `Gandia - ${viento_gandia}knots ${dir_gandia}`, url: "http://guardiandelfaro.es/viento#3" }
           ]
-          ,[{text:`${valor[0].fecha_consulta} + " ==> "+${diferencia_segundos}`}]
+          
         ]
       }
     });
