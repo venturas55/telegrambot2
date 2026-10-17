@@ -3,7 +3,8 @@ CREATE TABLE usuarios(
   email VARCHAR(255) DEFAULT NULL,
   username VARCHAR(100),
   nombre VARCHAR(255),
-  fecha_alta DATETIME DEFAULT CURRENT_TIMESTAMP
+  fecha_alta DATETIME DEFAULT CURRENT_TIMESTAMP,
+  privilegios ENUM('user', 'admin') DEFAULT 'user',
 );
 
 CREATE TABLE subscripciones (

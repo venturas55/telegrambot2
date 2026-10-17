@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "Admin Usuarios",
+    "slug": "admin-usuarios",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.telegrambot.adminusuarios"
+    },
+    "android": {
+      "package": "com.telegrambot.adminusuarios"
+    }
+  }
+}
