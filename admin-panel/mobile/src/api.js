@@ -1,5 +1,4 @@
 const API_BASE_URL = (process.env.EXPO_PUBLIC_API_URL || "").replace(/\/+$/, "");
-let sessionCookie = "";
 
 export class ApiError extends Error {
   constructor(message, status) {
@@ -23,7 +22,6 @@ async function request(path, options = {}) {
       credentials: "include",
       headers: {
         Accept: "application/json",
-        ...(sessionCookie ? { Cookie: sessionCookie } : {}),
         ...(options.body ? { "Content-Type": "application/json" } : {}),
         ...options.headers
       }
@@ -32,11 +30,6 @@ async function request(path, options = {}) {
     throw new Error(
       `No se pudo conectar con ${path}: ${cause.message || "comprueba la URL y la red."}`
     );
-  }
-
-  const setCookie = response.headers.get("set-cookie");
-  if (setCookie) {
-    sessionCookie = setCookie.split(";", 1)[0];
   }
 
   const contentType = response.headers.get("content-type") || "";
@@ -53,9 +46,6 @@ async function request(path, options = {}) {
   }
 
   if (!response.ok) {
-    if (response.status === 401) {
-      sessionCookie = "";
-    }
     throw new ApiError(
       result?.message || `Error del servidor (${response.status}).`,
       response.status
@@ -101,9 +91,7 @@ export function getSession() {
 }
 
 export function logout() {
-  return request("/logout").finally(() => {
-    sessionCookie = "";
-  });
+  return request("/logout");
 }
 
 export function activateSubscription(subscripcion_id) {
