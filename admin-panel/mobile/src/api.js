@@ -28,8 +28,10 @@ async function request(path, options = {}) {
         ...options.headers
       }
     });
-  } catch {
-    throw new Error("No se pudo conectar con el servidor. Comprueba la URL y la red.");
+  } catch (cause) {
+    throw new Error(
+      `No se pudo conectar con ${path}: ${cause.message || "comprueba la URL y la red."}`
+    );
   }
 
   const setCookie = response.headers.get("set-cookie");
@@ -38,9 +40,17 @@ async function request(path, options = {}) {
   }
 
   const contentType = response.headers.get("content-type") || "";
-  const result = contentType.includes("application/json")
-    ? await response.json()
-    : null;
+  const responseText = await response.text();
+  let result = null;
+  if (contentType.includes("application/json") && responseText) {
+    try {
+      result = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        `Respuesta JSON inválida de ${path} (HTTP ${response.status}, ${contentType}).`
+      );
+    }
+  }
 
   if (!response.ok) {
     if (response.status === 401) {
@@ -53,7 +63,11 @@ async function request(path, options = {}) {
   }
 
   if (!result) {
-    throw new Error("El servidor no devolvió una respuesta JSON válida.");
+    const finalUrl = response.redirected ? ` URL final: ${response.url}.` : "";
+    throw new Error(
+      `Respuesta inesperada de ${path}: HTTP ${response.status}, ` +
+      `${contentType || "sin Content-Type"}; se esperaba JSON.${finalUrl}`
+    );
   }
 
   return result;
@@ -68,6 +82,14 @@ function post(path, body) {
 
 export function getUsers() {
   return request("/api/users");
+}
+
+export function getUserPayments(telegram_id) {
+  return request(`/api/users/${encodeURIComponent(telegram_id)}/payments`);
+}
+
+export function getPaymentsDashboard() {
+  return request("/api/payments");
 }
 
 export function login(username, password) {
