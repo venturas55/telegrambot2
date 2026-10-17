@@ -63,12 +63,16 @@ async function handleLogin(req, res, wantsJson) {
   }
 
   try {
-    const authorized =
-      username === AUTH_USER &&
-      password === AUTH_PASS &&
-      await isAdminUser(AUTH_USER);
+    const usernameMatches = username === AUTH_USER;
+    const passwordMatches = password === AUTH_PASS;
+    const isAdmin = usernameMatches && await isAdminUser(AUTH_USER);
 
-    if (!authorized) {
+    if (!usernameMatches || !passwordMatches || !isAdmin) {
+      console.warn("Login de administrador rechazado:", {
+        usernameMatches,
+        passwordMatches,
+        isAdmin
+      });
       if (wantsJson) {
         return res.status(401).json({
           ok: false,
