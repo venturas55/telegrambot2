@@ -43,6 +43,7 @@ jobs:
           xcodebuild -version
 
       - name: Install dependencies
+        working-directory: admin-panel/mobile
         run: npm ci
 
       - name: Verify Expo config
