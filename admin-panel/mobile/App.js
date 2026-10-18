@@ -12,7 +12,8 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
+  useWindowDimensions
 } from "react-native";
 import {
   activateSubscription,
@@ -123,23 +124,32 @@ function MenuItem({ label, hint, icon, destructive = false, onPress }) {
   );
 }
 
-function ScreenHeader({ title, eyebrow = "DETALLE", onBack }) {
+function ScreenHeader({ title, eyebrow = "DETALLE", onBack, tablet = false }) {
   return (
     <View style={styles.screenHeader}>
-      <Pressable
-        accessibilityLabel="Volver"
-        accessibilityRole="button"
-        onPress={onBack}
-        style={({ pressed }) => [
-          styles.backButton,
-          pressed && styles.menuButtonPressed
+      <View
+        style={[
+          styles.screenHeaderInner,
+          tablet && styles.tabletScreenHeaderInner
         ]}
       >
-        <Text style={styles.backButtonText}>‹</Text>
-      </Pressable>
-      <View style={styles.screenHeaderText}>
-        <Text style={styles.eyebrow}>{eyebrow}</Text>
-        <Text numberOfLines={1} style={styles.screenTitle}>{title}</Text>
+        <Pressable
+          accessibilityLabel="Volver"
+          accessibilityRole="button"
+          onPress={onBack}
+          style={({ pressed }) => [
+            styles.backButton,
+            pressed && styles.menuButtonPressed
+          ]}
+        >
+          <Text style={styles.backButtonText}>‹</Text>
+        </Pressable>
+        <View style={styles.screenHeaderText}>
+          <Text style={styles.eyebrow}>{eyebrow}</Text>
+          <Text numberOfLines={1} style={styles.screenTitle}>
+            {title}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -148,6 +158,7 @@ function ScreenHeader({ title, eyebrow = "DETALLE", onBack }) {
 function UserCard({
   user,
   busy,
+  tablet = false,
   onActivate,
   onRevoke,
   onPay,
@@ -160,7 +171,7 @@ function UserCard({
   const displayName = user.username || user.nombre || "Usuario sin nombre";
 
   return (
-    <View style={styles.userCard}>
+    <View style={[styles.userCard, tablet && styles.tabletUserCard]}>
       <Pressable
         accessibilityHint="Abre los pagos y las peticiones del usuario"
         accessibilityRole="button"
@@ -249,13 +260,21 @@ function UserPaymentsScreen({
   const user = userPayments?.usuario || selectedUser;
   const payments = userPayments?.pagos || [];
   const requests = userPayments?.peticiones || [];
+  const isTablet = useWindowDimensions().width >= 768;
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#f3f6fb" />
-      <ScreenHeader title="Historial del usuario" onBack={onBack} />
+      <ScreenHeader
+        title="Historial del usuario"
+        onBack={onBack}
+        tablet={isTablet}
+      />
       <FlatList
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[
+          styles.listContent,
+          isTablet && styles.tabletListContent
+        ]}
         data={[]}
         ListHeaderComponent={
           <View>
@@ -293,48 +312,53 @@ function UserPaymentsScreen({
             ) : null}
 
             {!loading && userPayments ? (
-              <>
-                <View style={styles.sectionHeading}>
-                  <Text style={styles.sectionTitle}>Pagos</Text>
-                  <Text style={styles.sectionCount}>{payments.length}</Text>
+              <View style={isTablet && styles.historyColumns}>
+                <View style={isTablet && styles.historyColumn}>
+                  <View style={styles.sectionHeading}>
+                    <Text style={styles.sectionTitle}>Pagos</Text>
+                    <Text style={styles.sectionCount}>{payments.length}</Text>
+                  </View>
+                  {payments.length ? (
+                    payments.map((payment) => (
+                      <View key={payment.id} style={styles.historyCard}>
+                        <Text style={styles.historyPrimary}>
+                          {payment.precio} €
+                        </Text>
+                        <Text style={styles.historySecondary}>
+                          {formatDateTime(payment.fecha_pago)}
+                        </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={styles.emptyText}>No hay pagos registrados.</Text>
+                  )}
                 </View>
-                {payments.length ? (
-                  payments.map((payment) => (
-                    <View key={payment.id} style={styles.historyCard}>
-                      <Text style={styles.historyPrimary}>
-                        {payment.precio} €
-                      </Text>
-                      <Text style={styles.historySecondary}>
-                        {formatDateTime(payment.fecha_pago)}
-                      </Text>
-                    </View>
-                  ))
-                ) : (
-                  <Text style={styles.emptyText}>No hay pagos registrados.</Text>
-                )}
-
-                <View style={styles.sectionHeading}>
-                  <Text style={styles.sectionTitle}>Peticiones</Text>
-                  <Text style={styles.sectionCount}>{requests.length}</Text>
+                <View style={isTablet && styles.historyColumn}>
+                  <View style={styles.sectionHeading}>
+                    <Text style={styles.sectionTitle}>Peticiones</Text>
+                    <Text style={styles.sectionCount}>{requests.length}</Text>
+                  </View>
+                  {requests.length ? (
+                    requests.map((request, index) => (
+                      <View
+                        key={request.id ?? `${request.fecha}-${index}`}
+                        style={styles.historyCard}
+                      >
+                        <Text style={styles.historyPrimary}>
+                          {request.peticion}
+                        </Text>
+                        <Text style={styles.historySecondary}>
+                          {formatDateTime(request.fecha)}
+                        </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={styles.emptyText}>
+                      No hay peticiones registradas.
+                    </Text>
+                  )}
                 </View>
-                {requests.length ? (
-                  requests.map((request, index) => (
-                    <View
-                      key={request.id ?? `${request.fecha}-${index}`}
-                      style={styles.historyCard}
-                    >
-                      <Text style={styles.historyPrimary}>
-                        {request.peticion}
-                      </Text>
-                      <Text style={styles.historySecondary}>
-                        {formatDateTime(request.fecha)}
-                      </Text>
-                    </View>
-                  ))
-                ) : (
-                  <Text style={styles.emptyText}>No hay peticiones registradas.</Text>
-                )}
-              </>
+              </View>
             ) : null}
           </View>
         }
@@ -344,13 +368,26 @@ function UserPaymentsScreen({
 }
 
 function AllRequestsScreen({ requests, loading, error, onBack, onRetry }) {
+  const isTablet = useWindowDimensions().width >= 768;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#f3f6fb" />
-      <ScreenHeader title="Peticiones" eyebrow="ACTIVIDAD" onBack={onBack} />
+      <ScreenHeader
+        title="Peticiones"
+        eyebrow="ACTIVIDAD"
+        onBack={onBack}
+        tablet={isTablet}
+      />
       <FlatList
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[
+          styles.listContent,
+          isTablet && styles.tabletListContent
+        ]}
         data={requests}
+        numColumns={isTablet ? 2 : 1}
+        key={isTablet ? "tablet-requests" : "phone-requests"}
+        columnWrapperStyle={isTablet ? styles.tabletColumnWrapper : undefined}
         keyExtractor={(request) => String(request.id)}
         ListEmptyComponent={
           loading || error ? null : (
@@ -386,7 +423,7 @@ function AllRequestsScreen({ requests, loading, error, onBack, onRetry }) {
           </View>
         }
         renderItem={({ item }) => (
-          <View style={styles.requestCard}>
+          <View style={[styles.requestCard, isTablet && styles.tabletRequestCard]}>
             <View style={styles.requestCardTop}>
               <View style={styles.requestBullet} />
               <Text style={styles.historyPrimary}>{item.peticion}</Text>
@@ -466,6 +503,7 @@ function LoginScreen({ onLogin, busy, error }) {
 }
 
 export default function App() {
+  const isTablet = useWindowDimensions().width >= 768;
   const [users, setUsers] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
@@ -704,58 +742,68 @@ export default function App() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#f3f6fb" />
       <View style={styles.header}>
-        <View style={styles.headerBrand}>
-          <View style={styles.headerBrandMark}>
-            <Text style={styles.headerBrandInitial}>A</Text>
+        <View style={[styles.headerInner, isTablet && styles.tabletHeaderInner]}>
+          <View style={styles.headerBrand}>
+            <View style={styles.headerBrandMark}>
+              <Text style={styles.headerBrandInitial}>A</Text>
+            </View>
+            <View style={styles.headerTitles}>
+              <Text style={styles.eyebrow}>PANEL DE CONTROL</Text>
+              <Text style={styles.title}>Usuarios</Text>
+            </View>
           </View>
-          <View style={styles.headerTitles}>
-            <Text style={styles.eyebrow}>PANEL DE CONTROL</Text>
-            <Text style={styles.title}>Usuarios</Text>
-          </View>
-        </View>
-        <Pressable
-          accessibilityLabel="Abrir menú"
-          accessibilityRole="button"
-          onPress={() => setMenuVisible(true)}
-          style={({ pressed }) => [
-            styles.menuButton,
-            pressed && styles.menuButtonPressed
-          ]}
-        >
-          <View style={styles.hamburger}>
-            <View style={styles.hamburgerLine} />
-            <View style={[styles.hamburgerLine, styles.hamburgerLineMiddle]} />
-            <View style={styles.hamburgerLine} />
-          </View>
-        </Pressable>
-      </View>
-
-      <View style={styles.summary}>
-        <View style={styles.summaryDot} />
-        <Text style={styles.summaryLabel}>USUARIOS REGISTRADOS</Text>
-        <View style={styles.summaryCountWrap}>
-          <Text style={styles.summaryCount}>{users.length}</Text>
+          <Pressable
+            accessibilityLabel="Abrir menú"
+            accessibilityRole="button"
+            onPress={() => setMenuVisible(true)}
+            style={({ pressed }) => [
+              styles.menuButton,
+              pressed && styles.menuButtonPressed
+            ]}
+          >
+            <View style={styles.hamburger}>
+              <View style={styles.hamburgerLine} />
+              <View style={[styles.hamburgerLine, styles.hamburgerLineMiddle]} />
+              <View style={styles.hamburgerLine} />
+            </View>
+          </Pressable>
         </View>
       </View>
 
-      <TextInput
-        onChangeText={setSearch}
-        placeholder="Buscar por usuario o Telegram ID"
-        placeholderTextColor="#91a0b2"
-        returnKeyType="search"
-        style={styles.searchInput}
-        value={search}
-      />
-
-      {error ? (
-        <View style={styles.errorBanner}>
-          <Text style={styles.errorBannerText}>{error}</Text>
+      <View style={[styles.mainControls, isTablet && styles.tabletMainControls]}>
+        <View style={styles.summary}>
+          <View style={styles.summaryDot} />
+          <Text style={styles.summaryLabel}>USUARIOS REGISTRADOS</Text>
+          <View style={styles.summaryCountWrap}>
+            <Text style={styles.summaryCount}>{users.length}</Text>
+          </View>
         </View>
-      ) : null}
+
+        <TextInput
+          onChangeText={setSearch}
+          placeholder="Buscar por usuario o Telegram ID"
+          placeholderTextColor="#91a0b2"
+          returnKeyType="search"
+          style={styles.searchInput}
+          value={search}
+        />
+
+        {error ? (
+          <View style={styles.errorBanner}>
+            <Text style={styles.errorBannerText}>{error}</Text>
+          </View>
+        ) : null}
+      </View>
 
       <FlatList
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[
+          styles.listContent,
+          isTablet && styles.tabletListContent
+        ]}
         data={filteredUsers}
+        numColumns={isTablet ? 2 : 1}
+        key={isTablet ? "tablet-users" : "phone-users"}
+        columnWrapperStyle={isTablet ? styles.tabletColumnWrapper : undefined}
         keyExtractor={(user, index) =>
           `${user.telegram_id}-${user.subscripcion_id || "sin-suscripcion"}-${index}`
         }
@@ -771,6 +819,7 @@ export default function App() {
         renderItem={({ item }) => (
           <UserCard
             user={item}
+            tablet={isTablet}
             busy={busyUserId === item.telegram_id}
             onActivate={(user) =>
               confirmAction(
@@ -1024,9 +1073,17 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     paddingHorizontal: 18,
     paddingBottom: 13,
+    alignItems: "center"
+  },
+  headerInner: {
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
+  },
+  tabletHeaderInner: {
+    maxWidth: 1120,
+    alignSelf: "center"
   },
   headerBrand: {
     flexDirection: "row",
@@ -1080,12 +1137,19 @@ const styles = StyleSheet.create({
     width: 14
   },
   screenHeader: {
-    flexDirection: "row",
-    alignItems: "center",
     paddingTop: 13,
     paddingHorizontal: 18,
     paddingBottom: 14,
     backgroundColor: "#f3f6fb"
+  },
+  screenHeaderInner: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  tabletScreenHeaderInner: {
+    maxWidth: 1120,
+    alignSelf: "center"
   },
   backButton: {
     width: 42,
@@ -1134,6 +1198,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 12,
     backgroundColor: "#eaf1fb"
+  },
+  mainControls: {
+    width: "100%"
+  },
+  tabletMainControls: {
+    maxWidth: 1120,
+    alignSelf: "center"
   },
   summaryDot: {
     width: 7,
@@ -1185,6 +1256,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingBottom: 28
   },
+  tabletListContent: {
+    width: "100%",
+    maxWidth: 1120,
+    alignSelf: "center",
+    paddingHorizontal: 24
+  },
+  tabletColumnWrapper: {
+    justifyContent: "space-between"
+  },
   userCard: {
     backgroundColor: "#fff",
     borderRadius: 14,
@@ -1197,6 +1277,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.035,
     shadowRadius: 5,
     elevation: 1
+  },
+  tabletUserCard: {
+    width: "48.5%"
   },
   userCardHeading: {
     flexDirection: "row",
@@ -1375,6 +1458,15 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 1
   },
+  historyColumns: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 20
+  },
+  historyColumn: {
+    flex: 1,
+    minWidth: 0
+  },
   historyPrimary: {
     color: "#132238",
     fontSize: 14,
@@ -1506,6 +1598,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.035,
     shadowRadius: 5,
     elevation: 1
+  },
+  tabletRequestCard: {
+    width: "48.5%"
   },
   requestCardTop: {
     flexDirection: "row",
