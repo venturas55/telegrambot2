@@ -1,4 +1,4 @@
-name: Buscaviento iOS — Ad Hoc iPhone
+name: Buscaviento iOS - Ad Hoc iPhone
 
 on:
   workflow_dispatch:
@@ -15,6 +15,9 @@ jobs:
     name: Build IPA Ad Hoc
     runs-on: macos-26
     timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: admin-panel/mobile
     env:
       CI: '1'
       EXPO_NO_TELEMETRY: '1'
@@ -31,19 +34,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify project directory
+        run: |
+          test -f package.json || { echo 'Missing admin-panel/mobile/package.json'; exit 1; }
+          test -f package-lock.json || { echo 'Missing package-lock.json required by npm ci'; exit 1; }
+          test -f app.json || test -f app.config.js || test -f app.config.ts || { echo 'Expo config not found'; exit 1; }
+          test -f scripts/ios_prepare_signing.sh
+          test -f scripts/ios_build_archive.sh
+          test -f scripts/verify_expo_config.py
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: admin-panel/mobile/package-lock.json
 
       - name: Select Xcode
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
+          XCODE_APP="${XCODE_APP:-/Applications/Xcode_26.6.app}"
+          if [ -d "$XCODE_APP/Contents/Developer" ]; then
+            sudo xcode-select -s "$XCODE_APP/Contents/Developer"
+          else
+            echo "Requested Xcode path not found: $XCODE_APP; using installed default"
+          fi
           xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-path
 
       - name: Install dependencies
-        working-directory: admin-panel/mobile
         run: npm ci
 
       - name: Verify Expo config
@@ -69,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: buscaviento-adhoc-${{ github.run_number }}
-          path: output/*.ipa
+          path: admin-panel/mobile/output/*.ipa
           if-no-files-found: error
           retention-days: 14
 
