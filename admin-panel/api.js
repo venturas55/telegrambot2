@@ -18,13 +18,13 @@ export async function listUsers() {
       u.telegram_id,
       u.username,
       u.nombre,
+      s.estado,
       s.id AS subscripcion_id,
       CASE
-        WHEN s.end_date >= NOW() THEN 'activo'
-        ELSE 'inactivo'
-      END AS estado,
+        WHEN s.end_date >= NOW() and s.estado='activo' THEN 'true'
+        ELSE 'false'
+      END AS has_access,
       s.start_date,
-      (s.end_date >= NOW()) AS has_access,
       s.end_date
     FROM usuarios u
     LEFT JOIN subscripciones s

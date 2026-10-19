@@ -199,7 +199,7 @@ function UserCard({
                 hasAccess ? styles.activeText : styles.inactiveText
               ]}
             >
-              {isActive ? "Activo" : "Inactivo"}
+              {hasAccess ? "Activo" : "Inactivo"}
             </Text>
           </View>
         </View>
