@@ -23,7 +23,7 @@
     <tr data-href="/pagos/{{telegram_id}}">
       <td class="center"> <strong> {{username}} </strong></td>
       <td class="center">{{telegram_id}}</td>
-      <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}">{{#if has_access}} activo {{else}} inactivo {{/if}}</td>
+      <td class="center {{#if has_access}} activo {{else}} inactivo {{/if}}">{{has_access}} - {{#if has_access}} activo {{else}} inactivo {{/if}}</td>
       <td class="center expira" data-id="{{subscripcion_id}}" data-raw="{{fechaInputDateTime end_date}}">
         {{timeago end_date}} ({{formatearSp end_date }})
       </td>

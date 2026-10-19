@@ -23,8 +23,8 @@ export async function listUsers() {
       s.estado,
       s.id AS subscripcion_id,
       CASE
-        WHEN s.end_date >= NOW() and s.estado='activo' THEN 'true'
-        ELSE 'false'
+        WHEN s.end_date >= NOW() and s.estado='activo' THEN 1
+        ELSE 0
       END AS has_access,
       s.start_date,
       s.end_date
