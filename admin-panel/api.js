@@ -42,7 +42,7 @@ export async function getUserPayments(telegramId) {
     [telegramId]
   );
   const [peticiones] = await db.query(
-    "SELECT * FROM peticiones WHERE telegram_id=?",
+    "SELECT * FROM peticiones WHERE telegram_id=? order by fecha desc",
     [telegramId]
   );
   const [[usuario]] = await db.query(
