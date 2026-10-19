@@ -148,10 +148,6 @@ app.post("/delPayment", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
   console.log(subscripcion_id);
   await deletePayment(subscripcion_id);
-
-  if (req.accepts("json")) {
-    return res.json({ ok: true });
-  }
   res.redirect("/");
 });
 
@@ -159,10 +155,6 @@ app.post("/delPayment", simpleAuthMiddleware, async (req, res) => {
 app.post("/pay", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id, subscripcion_id } = req.body;
   await recordPayment(telegram_id, subscripcion_id);
-
-  if (req.accepts("json")) {
-    return res.json({ ok: true });
-  }
   res.redirect("/");
 });
 
@@ -209,10 +201,6 @@ app.post("/alta-nueva", async (req, res) => {
 app.post("/revoke", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
   await updateSubscriptionStatus(subscripcion_id, "inactivo");
-
-  if (req.accepts("json")) {
-    return res.json({ ok: true });
-  }
   res.redirect("/");
 });
 
@@ -220,10 +208,6 @@ app.post("/revoke", simpleAuthMiddleware, async (req, res) => {
 app.post("/activate", simpleAuthMiddleware, async (req, res) => {
   const { subscripcion_id } = req.body;
   await updateSubscriptionStatus(subscripcion_id, "activo");
-
-  if (req.accepts("json")) {
-    return res.json({ ok: true });
-  }
   res.redirect("/");
 });
 
@@ -232,10 +216,6 @@ app.post("/remove", simpleAuthMiddleware, async (req, res) => {
   const { telegram_id } = req.body;
   console.log(telegram_id);
   await removeUser(telegram_id);
-
-  if (req.accepts("json")) {
-    return res.json({ ok: true });
-  }
   res.redirect("/");
 });
 
@@ -258,7 +238,7 @@ app.post('/login', async (req, res) => {
 });
 
 //RUTA PARA LOGOUT
-app.get('/logout', (req, res) => {
+function handleLogout(req, res) {
   req.session.destroy((error) => {
     if (error) {
       console.error(error);
@@ -267,12 +247,15 @@ app.get('/logout', (req, res) => {
         message: "No se pudo cerrar la sesión."
       });
     }
-    if (req.accepts("json")) {
+    if (req.accepts(["html", "json"]) === "json") {
       return res.json({ ok: true });
     }
     res.redirect('/login');
   });
-});
+}
+
+app.get('/logout', handleLogout);
+app.post('/logout', handleLogout);
 
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Admin panel en https://localhost:${process.env.PORT}`);
