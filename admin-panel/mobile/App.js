@@ -29,6 +29,7 @@ import {
   revokeSubscription,
   updateExpiration
 } from "./src/api";
+import { colors, radii } from "./src/theme";
 
 function formatDate(value) {
   if (!value) return "Sin fecha de expiración";
@@ -264,7 +265,7 @@ function UserPaymentsScreen({
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f3f6fb" />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.canvas} />
       <ScreenHeader
         title="Historial del usuario"
         onBack={onBack}
@@ -299,7 +300,7 @@ function UserPaymentsScreen({
 
             {loading ? (
               <View style={styles.detailLoading}>
-                <ActivityIndicator color="#2563eb" size="small" />
+                <ActivityIndicator color={colors.primary} size="small" />
                 <Text style={styles.loadingText}>Cargando historial...</Text>
               </View>
             ) : null}
@@ -372,7 +373,7 @@ function AllRequestsScreen({ requests, loading, error, onBack, onRetry }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f3f6fb" />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.canvas} />
       <ScreenHeader
         title="Peticiones"
         eyebrow="ACTIVIDAD"
@@ -410,7 +411,7 @@ function AllRequestsScreen({ requests, loading, error, onBack, onRetry }) {
             </View>
             {loading ? (
               <View style={styles.detailLoading}>
-                <ActivityIndicator color="#2563eb" size="small" />
+                <ActivityIndicator color={colors.primary} size="small" />
                 <Text style={styles.loadingText}>Cargando peticiones...</Text>
               </View>
             ) : null}
@@ -466,7 +467,7 @@ function LoginScreen({ onLogin, busy, error }) {
           keyboardType="email-address"
           onChangeText={setUsername}
           placeholder="Tu usuario"
-          placeholderTextColor="#91a0b2"
+          placeholderTextColor={colors.textPlaceholder}
           style={styles.input}
           value={username}
         />
@@ -477,7 +478,7 @@ function LoginScreen({ onLogin, busy, error }) {
           onChangeText={setPassword}
           onSubmitEditing={() => onLogin(username, password)}
           placeholder="Tu contraseña"
-          placeholderTextColor="#91a0b2"
+          placeholderTextColor={colors.textPlaceholder}
           returnKeyType="go"
           secureTextEntry
           style={[styles.input, styles.loginInput]}
@@ -698,7 +699,7 @@ export default function App() {
   if (checkingSession) {
     return (
       <SafeAreaView style={styles.centered}>
-        <ActivityIndicator color="#2563eb" size="large" />
+        <ActivityIndicator color={colors.primary} size="large" />
         <Text style={styles.loadingText}>Conectando con el panel...</Text>
       </SafeAreaView>
     );
@@ -707,7 +708,7 @@ export default function App() {
   if (!authenticated) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="dark-content" backgroundColor="#f3f6fb" />
+        <StatusBar barStyle="dark-content" backgroundColor={colors.canvas} />
         <LoginScreen onLogin={handleLogin} busy={busy} error={error} />
       </SafeAreaView>
     );
@@ -740,7 +741,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f3f6fb" />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.canvas} />
       <View style={styles.header}>
         <View style={[styles.headerInner, isTablet && styles.tabletHeaderInner]}>
           <View style={styles.headerBrand}>
@@ -782,7 +783,7 @@ export default function App() {
         <TextInput
           onChangeText={setSearch}
           placeholder="Buscar por usuario o Telegram ID"
-          placeholderTextColor="#91a0b2"
+          placeholderTextColor={colors.textPlaceholder}
           returnKeyType="search"
           style={styles.searchInput}
           value={search}
@@ -887,7 +888,7 @@ export default function App() {
               autoCapitalize="none"
               onChangeText={setExpirationInput}
               placeholder="2026-12-31T23:59"
-              placeholderTextColor="#91a0b2"
+              placeholderTextColor={colors.textPlaceholder}
               style={styles.input}
               value={expirationInput}
             />
@@ -963,16 +964,16 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f3f6fb"
+    backgroundColor: colors.canvas
   },
   centered: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f3f6fb"
+    backgroundColor: colors.canvas
   },
   loadingText: {
-    color: "#64748b",
+    color: colors.textSecondary,
     marginTop: 12
   },
   loginWrapper: {
@@ -985,12 +986,12 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 440,
     alignSelf: "center",
-    backgroundColor: "#fff",
-    borderRadius: 24,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
     borderWidth: 1,
-    borderColor: "#e7edf5",
+    borderColor: colors.border,
     padding: 25,
-    shadowColor: "#102a43",
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 20,
@@ -1001,35 +1002,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 54,
     height: 54,
-    borderRadius: 17,
-    backgroundColor: "#1d4ed8",
+    borderRadius: radii.large,
+    backgroundColor: colors.primaryStrong,
     marginBottom: 23
   },
   brandMarkText: {
-    color: "#fff",
+    color: colors.surface,
     fontSize: 23,
     fontWeight: "800"
   },
   loginEyebrow: {
-    color: "#2563eb",
+    color: colors.primary,
     fontSize: 10,
     fontWeight: "800",
     letterSpacing: 1.2,
     marginBottom: 5
   },
   loginTitle: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 22,
     fontWeight: "800"
   },
   loginSubtitle: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 14,
     marginTop: 5,
     marginBottom: 26
   },
   inputLabel: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 13,
     fontWeight: "700",
     marginBottom: 7
@@ -1037,35 +1038,35 @@ const styles = StyleSheet.create({
   input: {
     height: 48,
     borderWidth: 1,
-    borderColor: "#d9e2ee",
-    borderRadius: 12,
-    backgroundColor: "#fff",
-    color: "#132238",
+    borderColor: colors.border,
+    borderRadius: radii.medium,
+    backgroundColor: colors.surface,
+    color: colors.text,
     fontSize: 15,
     paddingHorizontal: 13,
     marginBottom: 16
   },
   loginInput: {
     height: 50,
-    borderRadius: 13,
-    borderColor: "#dfe6ef",
-    backgroundColor: "#fbfcfe"
+    borderRadius: radii.medium,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceSubtle
   },
   errorText: {
-    color: "#b42318",
+    color: colors.danger,
     fontSize: 13,
     marginBottom: 14
   },
   loginError: {
     borderWidth: 1,
-    borderColor: "#f3d4d1",
-    borderRadius: 12,
-    backgroundColor: "#fff5f4",
+    borderColor: colors.dangerBorder,
+    borderRadius: radii.medium,
+    backgroundColor: colors.dangerSoft,
     padding: 11,
     marginBottom: 14
   },
   loginErrorText: {
-    color: "#a12a24",
+    color: colors.dangerText,
     fontSize: 13,
     lineHeight: 18
   },
@@ -1073,7 +1074,10 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     paddingHorizontal: 18,
     paddingBottom: 13,
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border
   },
   headerInner: {
     width: "100%",
@@ -1094,14 +1098,14 @@ const styles = StyleSheet.create({
   headerBrandMark: {
     width: 42,
     height: 42,
-    borderRadius: 14,
+    borderRadius: radii.medium,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#1d4ed8",
+    backgroundColor: colors.primaryStrong,
     marginRight: 11
   },
   headerBrandInitial: {
-    color: "#fff",
+    color: colors.surface,
     fontSize: 20,
     fontWeight: "800"
   },
@@ -1113,14 +1117,14 @@ const styles = StyleSheet.create({
     height: 44,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 14,
+    borderRadius: radii.medium,
     borderWidth: 1,
-    borderColor: "#e3e9f2",
-    backgroundColor: "#fff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     marginLeft: 12
   },
   menuButtonPressed: {
-    backgroundColor: "#edf3fc"
+    backgroundColor: colors.primarySoft
   },
   hamburger: {
     width: 19,
@@ -1131,7 +1135,7 @@ const styles = StyleSheet.create({
     height: 2,
     width: 19,
     borderRadius: 2,
-    backgroundColor: "#24364b"
+    backgroundColor: colors.text
   },
   hamburgerLineMiddle: {
     width: 14
@@ -1140,7 +1144,9 @@ const styles = StyleSheet.create({
     paddingTop: 13,
     paddingHorizontal: 18,
     paddingBottom: 14,
-    backgroundColor: "#f3f6fb"
+    backgroundColor: colors.canvas,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border
   },
   screenHeaderInner: {
     width: "100%",
@@ -1156,14 +1162,14 @@ const styles = StyleSheet.create({
     height: 42,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 14,
+    borderRadius: radii.medium,
     borderWidth: 1,
-    borderColor: "#e3e9f2",
-    backgroundColor: "#fff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     marginRight: 12
   },
   backButtonText: {
-    color: "#24364b",
+    color: colors.text,
     fontSize: 32,
     lineHeight: 34,
     marginTop: -3
@@ -1172,19 +1178,19 @@ const styles = StyleSheet.create({
     flex: 1
   },
   screenTitle: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 23,
     fontWeight: "800",
     marginTop: 1
   },
   eyebrow: {
-    color: "#7b8ba1",
+    color: colors.textMuted,
     fontSize: 10,
     fontWeight: "800",
     letterSpacing: 1.25
   },
   title: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 27,
     fontWeight: "800",
     marginTop: 1
@@ -1196,8 +1202,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginBottom: 11,
     paddingHorizontal: 12,
-    borderRadius: 12,
-    backgroundColor: "#eaf1fb"
+    borderRadius: radii.medium,
+    backgroundColor: colors.primarySoft
   },
   mainControls: {
     width: "100%"
@@ -1210,17 +1216,17 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 4,
-    backgroundColor: "#2563eb",
+    backgroundColor: colors.primary,
     marginRight: 8
   },
   summaryCount: {
-    color: "#1d4ed8",
+    color: colors.primaryStrong,
     fontSize: 13,
     fontWeight: "800",
     textAlign: "center"
   },
   summaryLabel: {
-    color: "#536780",
+    color: colors.textSecondary,
     fontSize: 10,
     fontWeight: "800",
     letterSpacing: 0.7,
@@ -1232,21 +1238,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 9,
-    backgroundColor: "#fff"
+    borderRadius: radii.small,
+    backgroundColor: colors.surface
   },
   searchInput: {
     height: 46,
     marginHorizontal: 18,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 13,
-    backgroundColor: "#fff",
-    color: "#132238",
+    borderColor: colors.border,
+    borderRadius: radii.medium,
+    backgroundColor: colors.surface,
+    color: colors.text,
     fontSize: 14,
     paddingHorizontal: 14,
-    shadowColor: "#183153",
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.035,
     shadowRadius: 5,
@@ -1266,13 +1272,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   userCard: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: radii.large,
     borderWidth: 1,
-    borderColor: "#e6ebf2",
-    padding: 11,
-    marginBottom: 8,
-    shadowColor: "#183153",
+    borderColor: colors.border,
+    padding: 14,
+    marginBottom: 10,
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.035,
     shadowRadius: 5,
@@ -1288,14 +1294,14 @@ const styles = StyleSheet.create({
   userAvatar: {
     width: 36,
     height: 36,
-    borderRadius: 12,
+    borderRadius: radii.small,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#eaf1ff",
+    backgroundColor: colors.primarySoft,
     marginRight: 9
   },
   userAvatarText: {
-    color: "#2456b3",
+    color: colors.primaryStrong,
     fontWeight: "800",
     fontSize: 15
   },
@@ -1303,35 +1309,35 @@ const styles = StyleSheet.create({
     flex: 1
   },
   userName: {
-    color: "#132238",
+    color: colors.text,
     fontWeight: "700",
     fontSize: 15
   },
   telegramId: {
-    color: "#748399",
+    color: colors.textMuted,
     fontSize: 12,
     marginTop: 3
   },
   statusBadge: {
-    borderRadius: 20,
+    borderRadius: radii.card,
     paddingHorizontal: 9,
     paddingVertical: 5
   },
   activeBadge: {
-    backgroundColor: "#e6f7ef"
+    backgroundColor: colors.successSoft
   },
   inactiveBadge: {
-    backgroundColor: "#f1f3f6"
+    backgroundColor: colors.neutralSoft
   },
   statusText: {
     fontSize: 11,
     fontWeight: "700"
   },
   activeText: {
-    color: "#18804b"
+    color: colors.success
   },
   inactiveText: {
-    color: "#68778a"
+    color: colors.textSecondary
   },
   userExpiryBlock: {
     flexDirection: "row",
@@ -1340,20 +1346,20 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     marginTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#eef1f6"
+    borderTopColor: colors.divider
   },
   userExpiryLabel: {
-    color: "#8491a3",
+    color: colors.textMuted,
     fontSize: 11,
     marginRight: 5
   },
   expiryValue: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
     fontWeight: "600"
   },
   detailsLink: {
-    color: "#2563eb",
+    color: colors.primary,
     fontSize: 11,
     fontWeight: "700",
     marginLeft: "auto"
@@ -1368,36 +1374,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 11,
-    borderRadius: 9,
-    backgroundColor: "#edf2f8",
+    borderRadius: radii.small,
+    backgroundColor: colors.neutralSoft,
     marginRight: 7,
     marginBottom: 4
   },
   largeActionButton: {
     width: "100%",
     minHeight: 49,
-    borderRadius: 13,
+    borderRadius: radii.medium,
     marginRight: 0,
     marginBottom: 0
   },
   compactActionButton: {
     minHeight: 31,
     paddingHorizontal: 8,
-    borderRadius: 8,
+    borderRadius: radii.small,
     marginRight: 5,
     marginBottom: 0
   },
   primaryButton: {
-    backgroundColor: "#2563eb"
+    backgroundColor: colors.primary
   },
   dangerButton: {
-    backgroundColor: "#fff0ef"
+    backgroundColor: colors.dangerSoft
   },
   disabledButton: {
     opacity: 0.5
   },
   actionText: {
-    color: "#34445b",
+    color: colors.textSecondary,
     fontSize: 12,
     fontWeight: "700"
   },
@@ -1408,30 +1414,30 @@ const styles = StyleSheet.create({
     fontSize: 14
   },
   lightActionText: {
-    color: "#fff"
+    color: colors.surface
   },
   dangerActionText: {
-    color: "#b42318"
+    color: colors.danger
   },
   errorBanner: {
     marginHorizontal: 20,
     marginBottom: 10,
-    borderRadius: 10,
-    backgroundColor: "#fff0ef",
+    borderRadius: radii.small,
+    backgroundColor: colors.dangerSoft,
     padding: 11
   },
   errorBannerText: {
-    color: "#a12a24",
+    color: colors.dangerText,
     fontSize: 13
   },
   emptyText: {
-    color: "#718096",
+    color: colors.textMuted,
     textAlign: "center",
     paddingVertical: 30,
     fontSize: 14
   },
   detailMeta: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 13,
     marginTop: 8
   },
@@ -1441,18 +1447,18 @@ const styles = StyleSheet.create({
     paddingVertical: 14
   },
   sectionTitle: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 18,
     fontWeight: "800"
   },
   historyCard: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: radii.large,
     borderWidth: 1,
-    borderColor: "#e6ebf2",
+    borderColor: colors.border,
     padding: 15,
     marginBottom: 9,
-    shadowColor: "#183153",
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.035,
     shadowRadius: 5,
@@ -1468,30 +1474,30 @@ const styles = StyleSheet.create({
     minWidth: 0
   },
   historyPrimary: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 14,
     fontWeight: "700"
   },
   historySecondary: {
-    color: "#748399",
+    color: colors.textMuted,
     fontSize: 12,
     marginTop: 5
   },
   requestUser: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     marginTop: 7
   },
   profileCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 17,
+    backgroundColor: colors.surface,
+    borderRadius: radii.large,
     borderWidth: 1,
-    borderColor: "#e6ebf2",
+    borderColor: colors.border,
     padding: 15,
     marginBottom: 12,
-    shadowColor: "#183153",
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.035,
     shadowRadius: 5,
@@ -1502,12 +1508,12 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 16,
-    backgroundColor: "#eaf1ff",
+    borderRadius: radii.large,
+    backgroundColor: colors.primarySoft,
     marginRight: 12
   },
   profileAvatarText: {
-    color: "#2456b3",
+    color: colors.primaryStrong,
     fontSize: 19,
     fontWeight: "800"
   },
@@ -1516,12 +1522,12 @@ const styles = StyleSheet.create({
     minWidth: 0
   },
   profileName: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 16,
     fontWeight: "800"
   },
   profileTelegram: {
-    color: "#748399",
+    color: colors.textMuted,
     fontSize: 12,
     marginTop: 4
   },
@@ -1534,26 +1540,26 @@ const styles = StyleSheet.create({
   },
   sectionCount: {
     overflow: "hidden",
-    color: "#2456b3",
+    color: colors.primaryStrong,
     fontSize: 12,
     fontWeight: "800",
     textAlign: "center",
     minWidth: 27,
     paddingHorizontal: 8,
     paddingVertical: 5,
-    borderRadius: 9,
-    backgroundColor: "#eaf1ff"
+    borderRadius: radii.small,
+    backgroundColor: colors.primarySoft
   },
   requestsSummary: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radii.large,
     borderWidth: 1,
-    borderColor: "#e6ebf2",
+    borderColor: colors.border,
     padding: 13,
     marginBottom: 12,
-    shadowColor: "#183153",
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.035,
     shadowRadius: 5,
@@ -1564,12 +1570,12 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 13,
-    backgroundColor: "#eaf1ff",
+    borderRadius: radii.medium,
+    backgroundColor: colors.primarySoft,
     marginRight: 11
   },
   requestsSummaryMarkText: {
-    color: "#2456b3",
+    color: colors.primaryStrong,
     fontSize: 17,
     fontWeight: "800"
   },
@@ -1577,23 +1583,23 @@ const styles = StyleSheet.create({
     flex: 1
   },
   requestsSummaryTitle: {
-    color: "#203249",
+    color: colors.text,
     fontSize: 13,
     fontWeight: "800"
   },
   requestsSummaryHint: {
-    color: "#8491a3",
+    color: colors.textMuted,
     fontSize: 11,
     marginTop: 3
   },
   requestCard: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: radii.large,
     borderWidth: 1,
-    borderColor: "#e6ebf2",
+    borderColor: colors.border,
     padding: 14,
     marginBottom: 8,
-    shadowColor: "#183153",
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.035,
     shadowRadius: 5,
@@ -1610,7 +1616,7 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 4,
-    backgroundColor: "#2563eb",
+    backgroundColor: colors.primary,
     marginTop: 5,
     marginRight: 9
   },
@@ -1618,18 +1624,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(15, 23, 42, 0.42)",
+    backgroundColor: colors.overlay,
     padding: 20
   },
   modalCard: {
     width: "100%",
     maxWidth: 420,
-    borderRadius: 22,
+    borderRadius: radii.card,
     padding: 22,
     borderWidth: 1,
-    borderColor: "#e7edf5",
-    backgroundColor: "#fff",
-    shadowColor: "#102a43",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.16,
     shadowRadius: 24,
@@ -1645,12 +1651,12 @@ const styles = StyleSheet.create({
     height: 42,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 14,
-    backgroundColor: "#eaf1ff",
+    borderRadius: radii.medium,
+    backgroundColor: colors.primarySoft,
     marginRight: 11
   },
   modalIconText: {
-    color: "#2456b3",
+    color: colors.primaryStrong,
     fontSize: 21,
     fontWeight: "800"
   },
@@ -1658,19 +1664,19 @@ const styles = StyleSheet.create({
     flex: 1
   },
   modalEyebrow: {
-    color: "#8291a5",
+    color: colors.textMuted,
     fontSize: 9,
     fontWeight: "800",
     letterSpacing: 1.1,
     marginBottom: 2
   },
   modalTitle: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 18,
     fontWeight: "800"
   },
   modalHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 13,
     lineHeight: 19,
     marginBottom: 14
@@ -1681,24 +1687,24 @@ const styles = StyleSheet.create({
     marginTop: 4,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: "#edf0f5"
+    borderTopColor: colors.divider
   },
   menuOverlay: {
     flex: 1,
     alignItems: "flex-end",
     paddingTop: Platform.OS === "android" ? 48 : 60,
     paddingHorizontal: 14,
-    backgroundColor: "rgba(15, 23, 42, 0.32)"
+    backgroundColor: colors.overlay
   },
   menuPanel: {
     width: "100%",
     maxWidth: 360,
-    borderRadius: 20,
+    borderRadius: radii.card,
     paddingHorizontal: 16,
     paddingTop: 17,
     paddingBottom: 9,
-    backgroundColor: "#fff",
-    shadowColor: "#102a43",
+    backgroundColor: colors.surface,
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.16,
     shadowRadius: 24,
@@ -1711,13 +1717,13 @@ const styles = StyleSheet.create({
     paddingBottom: 14
   },
   menuEyebrow: {
-    color: "#8291a5",
+    color: colors.textMuted,
     fontSize: 9,
     fontWeight: "800",
     letterSpacing: 1.3
   },
   menuTitle: {
-    color: "#132238",
+    color: colors.text,
     fontSize: 21,
     fontWeight: "800",
     marginTop: 2
@@ -1727,17 +1733,17 @@ const styles = StyleSheet.create({
     height: 34,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 11,
-    backgroundColor: "#f1f4f8"
+    borderRadius: radii.small,
+    backgroundColor: colors.neutralSoft
   },
   menuCloseText: {
-    color: "#536780",
+    color: colors.textSecondary,
     fontSize: 24,
     lineHeight: 27
   },
   menuDivider: {
     height: 1,
-    backgroundColor: "#edf0f5",
+    backgroundColor: colors.divider,
     marginBottom: 6
   },
   menuItem: {
@@ -1745,49 +1751,49 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 5,
-    borderRadius: 12
+    borderRadius: radii.medium
   },
   menuItemPressed: {
-    backgroundColor: "#f5f7fb"
+    backgroundColor: colors.surfaceSubtle
   },
   menuIcon: {
     width: 36,
     height: 36,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 11,
-    backgroundColor: "#eaf1ff",
+    borderRadius: radii.small,
+    backgroundColor: colors.primarySoft,
     marginRight: 11
   },
   menuIconText: {
-    color: "#2456b3",
+    color: colors.primaryStrong,
     fontSize: 15,
     fontWeight: "800"
   },
   menuIconDanger: {
-    backgroundColor: "#fff0ef"
+    backgroundColor: colors.dangerSoft
   },
   menuIconDangerText: {
-    color: "#b42318"
+    color: colors.danger
   },
   menuItemText: {
     flex: 1
   },
   menuItemLabel: {
-    color: "#203249",
+    color: colors.text,
     fontSize: 14,
     fontWeight: "700"
   },
   menuItemDanger: {
-    color: "#b42318"
+    color: colors.danger
   },
   menuItemHint: {
-    color: "#8491a3",
+    color: colors.textMuted,
     fontSize: 11,
     marginTop: 3
   },
   menuChevron: {
-    color: "#a4afbd",
+    color: colors.textMuted,
     fontSize: 24,
     marginLeft: 8
   }
