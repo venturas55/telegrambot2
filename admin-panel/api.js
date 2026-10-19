@@ -12,6 +12,8 @@ export async function isAdminUser(username) {
   return rows.length > 0;
 }
 
+//estado se puede imponer desde el admin. Conceder o Revokar permiso. Para manejar las botoneras (dar o revokar permisos)
+//hasAccess tiene que tener estado activo AND end_date >= NOW() para que sea true. Esto es lo que se usa en el bot para permitir o denegar acceso a los comandos premium.
 export async function listUsers() {
   const [users] = await db.query(`
     SELECT
