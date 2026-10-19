@@ -44,6 +44,8 @@ app.use(session({
   secret: 'clave_super_secreta',
   resave: false,
   saveUninitialized: false,
+  rolling: true,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
 }));
 
 async function handleLogin(req, res, wantsJson) {
