@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Image,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -746,7 +747,12 @@ export default function App() {
         <View style={[styles.headerInner, isTablet && styles.tabletHeaderInner]}>
           <View style={styles.headerBrand}>
             <View style={styles.headerBrandMark}>
-              <Text style={styles.headerBrandInitial}>A</Text>
+              <Image
+                accessibilityLabel="Logo de Guardián del Faro"
+                resizeMode="cover"
+                source={require("./assets/dark.jpg")}
+                style={styles.headerBrandImage}
+              />
             </View>
             <View style={styles.headerTitles}>
               <Text style={styles.eyebrow}>PANEL DE CONTROL</Text>
@@ -1104,10 +1110,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryStrong,
     marginRight: 11
   },
-  headerBrandInitial: {
-    color: colors.surface,
-    fontSize: 20,
-    fontWeight: "800"
+  headerBrandImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: radii.medium
   },
   headerTitles: {
     flex: 1
